@@ -11,10 +11,10 @@
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-    
+
     <ShellContent
         Title="Media Servers"
-        ContentTemplate="{DataTemplate views:MediaServersView}"
-        Route="MediaServers" />
+        Route="MediaServers"
+        x:Name="MediaServersShellContent" />
 
 </Shell>

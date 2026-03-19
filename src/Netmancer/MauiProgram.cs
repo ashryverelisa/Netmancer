@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Netmancer.ViewModels;
 using Netmancer.Views;
+using Rssdp.Infrastructure;
 
 namespace Netmancer;
 
@@ -20,7 +21,7 @@ public static class MauiProgram
             });
 
         AddViewsAndViewModels(builder.Services);
-        
+
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
@@ -32,7 +33,8 @@ public static class MauiProgram
     {
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MediaServersViewModel>();
-        services.AddTransient<MediaServersView>();
-        services.AddTransient<MainPage>();
+        services.AddSingleton<AppShell>();
+        services.AddSingleton<MediaServersView>();
+        services.AddSingleton<MainPage>();
     }
 }

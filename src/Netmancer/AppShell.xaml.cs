@@ -1,9 +1,12 @@
-﻿namespace Netmancer;
+﻿using Netmancer.Views;
+
+namespace Netmancer;
 
 public partial class AppShell : Shell
 {
-    public AppShell()
+    public AppShell(MediaServersView mediaServersView)
     {
         InitializeComponent();
+        MediaServersShellContent.Content = mediaServersView;
     }
 }

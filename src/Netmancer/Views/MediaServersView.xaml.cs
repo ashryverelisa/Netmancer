@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Netmancer.ViewModels;
+﻿using Netmancer.ViewModels;
 
 namespace Netmancer.Views;
 
 public partial class MediaServersView : ContentPage
 {
     private readonly MediaServersViewModel _mediaServersViewModel;
-    
+
     public MediaServersView(MediaServersViewModel mediaServersViewModel)
     {
-        _mediaServersViewModel = mediaServersViewModel;
         InitializeComponent();
+        _mediaServersViewModel = mediaServersViewModel;
         BindingContext = _mediaServersViewModel;
     }
-    
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

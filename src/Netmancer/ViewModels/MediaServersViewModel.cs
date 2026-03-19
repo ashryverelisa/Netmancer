@@ -14,21 +14,23 @@ public partial class MediaServersViewModel : ObservableObject
     {
         Devices.Clear();
 
-        var deviceLocator = new SsdpDeviceLocator();
+        using var deviceLocator = new SsdpDeviceLocator();
+        var foundDevices = await deviceLocator.SearchAsync("upnp:rootdevice", TimeSpan.FromSeconds(5));
 
-        deviceLocator.NotificationFilter = "upnp:rootdevice";
-        deviceLocator.DeviceAvailable += async (_, e) =>
+        foreach (var device in foundDevices)
         {
-            var deviceInfo = await e.DiscoveredDevice.GetDeviceInfo();
-            var friendlyName = deviceInfo.FriendlyName;
-
-            MainThread.BeginInvokeOnMainThread(() =>
+            try
             {
+                var deviceInfo = await device.GetDeviceInfo();
+                var friendlyName = deviceInfo.FriendlyName;
+
                 if (!string.IsNullOrEmpty(friendlyName) && !Devices.Contains(friendlyName))
                     Devices.Add(friendlyName);
-            });
-        };
-
-        await deviceLocator.SearchAsync();
+            }
+            catch
+            {
+                // Device didn't respond to description request; skip it
+            }
+        }
     }
 }
