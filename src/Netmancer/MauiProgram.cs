@@ -33,7 +33,7 @@ public static class MauiProgram
     {
         // Services
         services.AddHttpClient();
-        services.AddSingleton<UpnpContentDirectoryService>();
+        services.AddSingleton<IUpnpContentDirectoryService, UpnpContentDirectoryService>();
 
         // ViewModels
         services.AddSingleton<MainViewModel>();

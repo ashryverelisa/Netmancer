@@ -3,7 +3,7 @@ using Netmancer.Models;
 
 namespace Netmancer.Services;
 
-public class UpnpContentDirectoryService(HttpClient httpClient)
+public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDirectoryService
 {
     private static readonly XNamespace _contentDirectoryNs = "urn:schemas-upnp-org:service:ContentDirectory:1";
     private static readonly XNamespace _didlNs = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/";

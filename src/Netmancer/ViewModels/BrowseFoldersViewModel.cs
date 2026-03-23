@@ -9,7 +9,7 @@ namespace Netmancer.ViewModels;
 [QueryProperty(nameof(DeviceName), "deviceName")]
 [QueryProperty(nameof(DescriptionUrl), "descriptionUrl")]
 [QueryProperty(nameof(ObjectId), "objectId")]
-public partial class BrowseFoldersViewModel(UpnpContentDirectoryService contentDirectoryService) : ObservableObject
+public partial class BrowseFoldersViewModel(IUpnpContentDirectoryService contentDirectoryService) : ObservableObject
 {
     [ObservableProperty]
     private string _deviceName = string.Empty;
