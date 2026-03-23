@@ -17,7 +17,8 @@ public partial class MediaServersView : ContentPage
     {
         base.OnAppearing();
 
-        if (_mediaServersViewModel.SearchCommand.CanExecute(null))
+        if (_mediaServersViewModel.Devices.Count == 0 &&
+            _mediaServersViewModel.SearchCommand.CanExecute(null))
             await _mediaServersViewModel.SearchCommand.ExecuteAsync(null);
     }
 }
