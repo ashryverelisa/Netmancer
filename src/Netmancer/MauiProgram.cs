@@ -32,6 +32,7 @@ public static class MauiProgram
     private static void AddViewsAndViewModels(IServiceCollection services)
     {
         // Services
+        services.AddHttpClient();
         services.AddSingleton<UpnpContentDirectoryService>();
 
         // ViewModels

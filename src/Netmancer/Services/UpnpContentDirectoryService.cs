@@ -3,10 +3,8 @@ using Netmancer.Models;
 
 namespace Netmancer.Services;
 
-public class UpnpContentDirectoryService
+public class UpnpContentDirectoryService(HttpClient httpClient)
 {
-    private static readonly HttpClient _httpClient = new();
-
     private static readonly XNamespace _contentDirectoryNs = "urn:schemas-upnp-org:service:ContentDirectory:1";
     private static readonly XNamespace _didlNs = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/";
     private static readonly XNamespace _dcNs = "http://purl.org/dc/elements/1.1/";
@@ -51,7 +49,7 @@ public class UpnpContentDirectoryService
             };
             request.Headers.Add("SOAPAction", "\"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"");
 
-            using var response = await _httpClient.SendAsync(request);
+            using var response = await httpClient.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             var (items, numberReturned, totalMatches) = ParseBrowseResponse(responseBody);
@@ -74,7 +72,7 @@ public class UpnpContentDirectoryService
     {
         try
         {
-            var xml = await _httpClient.GetStringAsync(descriptionLocation);
+            var xml = await httpClient.GetStringAsync(descriptionLocation);
             var doc = XDocument.Parse(xml);
 
             XNamespace deviceNs = "urn:schemas-upnp-org:device-1-0";
@@ -101,7 +99,7 @@ public class UpnpContentDirectoryService
         }
     }
 
-    private (List<ContentItem> Items, int NumberReturned, int TotalMatches) ParseBrowseResponse(string responseXml)
+    internal (List<ContentItem> Items, int NumberReturned, int TotalMatches) ParseBrowseResponse(string responseXml)
     {
         var items = new List<ContentItem>();
         var numberReturned = 0;
