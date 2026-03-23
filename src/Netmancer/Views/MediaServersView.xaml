@@ -3,15 +3,24 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Netmancer.ViewModels"
+             xmlns:models="clr-namespace:Netmancer.Models"
              x:Class="Netmancer.Views.MediaServersView">
-    
+
     <CollectionView ItemsSource="{Binding Devices}"
-                    x:DataType="viewmodels:MediaServersViewModel">
+                    x:DataType="viewmodels:MediaServersViewModel"
+                    SelectionMode="None">
         <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="x:String">
-                <Label Text="{Binding .}"
-                       Padding="16,8"
-                       FontSize="16" />
+            <DataTemplate x:DataType="models:MediaDevice">
+                <Grid Padding="16,8">
+                    <Label Text="{Binding FriendlyName}"
+                           FontSize="16"
+                           VerticalTextAlignment="Center" />
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MediaServersViewModel}}, Path=DeviceTappedCommand}"
+                            CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+                </Grid>
             </DataTemplate>
         </CollectionView.ItemTemplate>
         <CollectionView.EmptyView>

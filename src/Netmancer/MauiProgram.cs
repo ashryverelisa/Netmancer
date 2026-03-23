@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Netmancer.Services;
 using Netmancer.ViewModels;
 using Netmancer.Views;
-using Rssdp.Infrastructure;
 
 namespace Netmancer;
 
@@ -31,10 +31,18 @@ public static class MauiProgram
 
     private static void AddViewsAndViewModels(IServiceCollection services)
     {
+        // Services
+        services.AddSingleton<UpnpContentDirectoryService>();
+
+        // ViewModels
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MediaServersViewModel>();
+        services.AddTransient<BrowseFoldersViewModel>();
+
+        // Views / Shell
         services.AddSingleton<AppShell>();
         services.AddSingleton<MediaServersView>();
+        services.AddTransient<BrowseFoldersView>();
         services.AddSingleton<MainPage>();
     }
 }

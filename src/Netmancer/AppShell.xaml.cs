@@ -8,5 +8,7 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
         MediaServersShellContent.Content = mediaServersView;
+
+        Routing.RegisterRoute("BrowseFolders", typeof(BrowseFoldersView));
     }
 }

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Netmancer.ViewModels"
+             xmlns:models="clr-namespace:Netmancer.Models"
+             xmlns:converters="clr-namespace:Netmancer.Converters"
+             x:Class="Netmancer.Views.BrowseFoldersView"
+             x:DataType="viewmodels:BrowseFoldersViewModel"
+             Title="{Binding DeviceName}">
+
+    <ContentPage.Resources>
+        <converters:InvertBoolConverter x:Key="InvertBoolConverter" />
+    </ContentPage.Resources>
+
+    <CollectionView ItemsSource="{Binding Items}"
+                    SelectionMode="None">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="models:ContentItem">
+                <Grid Padding="16,10" ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Text="{Binding Icon}"
+                           FontSize="20"
+                           VerticalTextAlignment="Center"
+                           Margin="0,0,12,0" />
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="{Binding Title}"
+                               FontSize="16"
+                               LineBreakMode="TailTruncation" />
+                        <Label Text="{Binding Subtitle}"
+                               FontSize="12"
+                               TextColor="Gray"
+                               IsVisible="{Binding IsContainer, Converter={StaticResource InvertBoolConverter}}" />
+                    </VerticalStackLayout>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:BrowseFoldersViewModel}}, Path=ItemTappedCommand}"
+                            CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+        <CollectionView.EmptyView>
+            <Label Text="No items found."
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   FontSize="16"
+                   TextColor="Gray"
+                   Margin="0,40,0,0" />
+        </CollectionView.EmptyView>
+    </CollectionView>
+</ContentPage>
+
+
