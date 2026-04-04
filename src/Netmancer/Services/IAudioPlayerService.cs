@@ -38,9 +38,4 @@ public interface IAudioPlayerService : INotifyPropertyChanged
     /// The MediaElement source URI — the view binds to this to drive the actual player.
     /// </summary>
     string? SourceUrl { get; }
-
-    /// <summary>
-    /// Raised when the view should execute a media command (Play, Pause, Stop).
-    /// </summary>
-    event Action<MediaCommand>? MediaCommandRequested;
 }

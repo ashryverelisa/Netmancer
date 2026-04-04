@@ -78,9 +78,14 @@
             <Slider x:Name="PositionSlider"
                     Minimum="0"
                     Maximum="{Binding DurationSeconds}"
-                    Value="{Binding PositionSeconds}"
-                    DragStarted="PositionSlider_DragStarted"
-                    DragCompleted="PositionSlider_DragCompleted" />
+                    Value="{Binding PositionSeconds}">
+                <Slider.Behaviors>
+                    <toolkit:EventToCommandBehavior EventName="DragStarted"
+                                                    Command="{Binding DragStartedCommand}" />
+                    <toolkit:EventToCommandBehavior EventName="DragCompleted"
+                                                    Command="{Binding DragCompletedCommand}" />
+                </Slider.Behaviors>
+            </Slider>
             <Grid Grid.Row="1" ColumnDefinitions="*,*">
                 <Label Grid.Column="0"
                        Text="{Binding PositionDisplay}"

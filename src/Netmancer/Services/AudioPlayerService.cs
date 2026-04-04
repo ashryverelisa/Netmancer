@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Netmancer.Messages;
 using Netmancer.Models;
 
 namespace Netmancer.Services;
@@ -27,11 +29,6 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService
     public bool CanGoNext => _currentIndex >= 0 && _currentIndex < _playlist.Count - 1;
     public bool CanGoPrevious => _currentIndex > 0;
 
-    /// <summary>
-    /// Raised when the view should execute a media command (Play, Pause, Stop).
-    /// </summary>
-    public event Action<MediaCommand>? MediaCommandRequested;
-
     public void Play(ContentItem item, IReadOnlyList<ContentItem>? playlist = null)
     {
         if (playlist is not null)
@@ -54,7 +51,7 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService
         IsPlaying = true;
         OnPropertyChanged(nameof(CanGoNext));
         OnPropertyChanged(nameof(CanGoPrevious));
-        MediaCommandRequested?.Invoke(MediaCommand.Play);
+        WeakReferenceMessenger.Default.Send(new MediaCommandRequestedMessage(MediaCommand.Play));
     }
 
     public void PlayPause()
@@ -64,12 +61,12 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService
         if (IsPlaying)
         {
             IsPlaying = false;
-            MediaCommandRequested?.Invoke(MediaCommand.Pause);
+            WeakReferenceMessenger.Default.Send(new MediaCommandRequestedMessage(MediaCommand.Pause));
         }
         else
         {
             IsPlaying = true;
-            MediaCommandRequested?.Invoke(MediaCommand.Resume);
+            WeakReferenceMessenger.Default.Send(new MediaCommandRequestedMessage(MediaCommand.Resume));
         }
     }
 
