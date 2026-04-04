@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
+﻿
 namespace Netmancer;
 
 public partial class App : Application

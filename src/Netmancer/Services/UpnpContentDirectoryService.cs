@@ -150,6 +150,9 @@ public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDi
                 Title = item.Element(_dcNs + "title")?.Value ?? "(unknown)",
                 IsContainer = false,
                 ResourceUrl = item.Element(_didlNs + "res")?.Value,
+                Artist = item.Element(_upnpNs + "artist")?.Value
+                         ?? item.Element(_dcNs + "creator")?.Value,
+                AlbumArtUri = item.Element(_upnpNs + "albumArtURI")?.Value,
                 MediaClass = item.Element(_upnpNs + "class")?.Value ?? string.Empty
             }));
         }
@@ -161,8 +164,4 @@ public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDi
         return (items, numberReturned, totalMatches);
     }
 }
-
-
-
-
 

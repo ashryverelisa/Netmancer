@@ -14,6 +14,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitMediaElement(isAndroidForegroundServiceEnabled: false)
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -34,16 +35,17 @@ public static class MauiProgram
         // Services
         services.AddHttpClient();
         services.AddSingleton<IUpnpContentDirectoryService, UpnpContentDirectoryService>();
+        services.AddSingleton<IAudioPlayerService, AudioPlayerService>();
 
         // ViewModels
-        services.AddSingleton<MainViewModel>();
         services.AddSingleton<MediaServersViewModel>();
         services.AddTransient<BrowseFoldersViewModel>();
+        services.AddSingleton<NowPlayingViewModel>();
 
         // Views / Shell
         services.AddSingleton<AppShell>();
         services.AddSingleton<MediaServersView>();
         services.AddTransient<BrowseFoldersView>();
-        services.AddSingleton<MainPage>();
+        services.AddTransient<NowPlayingView>();
     }
 }

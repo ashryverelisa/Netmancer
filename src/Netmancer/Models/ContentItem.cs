@@ -13,6 +13,16 @@ public class ContentItem
     public string? ResourceUrl { get; init; }
 
     /// <summary>
+    /// Artist name from the &lt;upnp:artist&gt; or &lt;dc:creator&gt; element.
+    /// </summary>
+    public string? Artist { get; init; }
+
+    /// <summary>
+    /// Album art / cover URL from the &lt;upnp:albumArtURI&gt; element (audio items only).
+    /// </summary>
+    public string? AlbumArtUri { get; init; }
+
+    /// <summary>
     /// UPnP class, e.g. "object.item.audioItem.musicTrack", "object.item.videoItem", etc.
     /// </summary>
     public string MediaClass { get; init; } = string.Empty;
@@ -37,4 +47,3 @@ public class ContentItem
         MediaClass.Contains("image", StringComparison.OrdinalIgnoreCase) ? "Image" :
         "File";
 }
-

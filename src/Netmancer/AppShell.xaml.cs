@@ -10,5 +10,6 @@ public partial class AppShell : Shell
         MediaServersShellContent.Content = mediaServersView;
 
         Routing.RegisterRoute("BrowseFolders", typeof(BrowseFoldersView));
+        Routing.RegisterRoute("NowPlaying", typeof(NowPlayingView));
     }
 }

@@ -10,4 +10,3 @@ public interface IUpnpContentDirectoryService
     /// </summary>
     Task<List<ContentItem>> BrowseAsync(Uri descriptionLocation, string objectId = "0");
 }
-

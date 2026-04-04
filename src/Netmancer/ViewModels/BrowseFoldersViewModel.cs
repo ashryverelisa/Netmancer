@@ -9,16 +9,18 @@ namespace Netmancer.ViewModels;
 [QueryProperty(nameof(DeviceName), "deviceName")]
 [QueryProperty(nameof(DescriptionUrl), "descriptionUrl")]
 [QueryProperty(nameof(ObjectId), "objectId")]
-public partial class BrowseFoldersViewModel(IUpnpContentDirectoryService contentDirectoryService) : ObservableObject
+public partial class BrowseFoldersViewModel(
+    IUpnpContentDirectoryService contentDirectoryService,
+    IAudioPlayerService audioPlayerService) : ObservableObject
 {
     [ObservableProperty]
-    private string _deviceName = string.Empty;
+    public partial string DeviceName { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _descriptionUrl = string.Empty;
+    public partial string DescriptionUrl { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _objectId = "0";
+    public partial string ObjectId { get; set; } = "0";
 
     public ObservableCollection<ContentItem> Items { get; } = [];
 
@@ -53,13 +55,21 @@ public partial class BrowseFoldersViewModel(IUpnpContentDirectoryService content
         }
         else if (!string.IsNullOrEmpty(item.ResourceUrl))
         {
-            try
+            if (item.MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase))
             {
-                await Launcher.Default.OpenAsync(new Uri(item.ResourceUrl));
+                audioPlayerService.Play(item);
+                await Shell.Current.GoToAsync("NowPlaying");
             }
-            catch
+            else
             {
-                // No handler available for this media type
+                try
+                {
+                    await Launcher.Default.OpenAsync(new Uri(item.ResourceUrl));
+                }
+                catch
+                {
+                    // No handler available for this media type
+                }
             }
         }
     }

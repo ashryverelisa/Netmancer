@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Netmancer.ViewModels"
+             xmlns:converters="clr-namespace:Netmancer.Converters"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Netmancer.Views.NowPlayingView"
+             x:DataType="viewmodels:NowPlayingViewModel"
+             Title="Now Playing"
+             Shell.PresentationMode="ModalAnimated">
+
+    <ContentPage.Resources>
+        <converters:IsNullConverter x:Key="IsNullConverter" />
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Close" Command="{Binding GoBackCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto" Padding="24,16">
+
+        <!-- Hidden audio player -->
+        <toolkit:MediaElement x:Name="Player"
+                              IsVisible="False"
+                              HeightRequest="0"
+                              WidthRequest="0"
+                              ShouldAutoPlay="False"
+                              ShouldShowPlaybackControls="False" />
+
+        <!-- Album Art -->
+        <Border Grid.Row="1"
+                StrokeThickness="0"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                MaximumHeightRequest="320"
+                MaximumWidthRequest="320">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.3" />
+            </Border.Shadow>
+            <Grid HeightRequest="300" WidthRequest="300">
+                <!-- Fallback: music note when no album art -->
+                <Label Text="🎵"
+                       FontSize="100"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
+                <!-- Album art image -->
+                <Image Source="{Binding AlbumArtUri}"
+                       Aspect="AspectFill"
+                       HeightRequest="300"
+                       WidthRequest="300" />
+            </Grid>
+        </Border>
+
+        <!-- Track Info -->
+        <VerticalStackLayout Grid.Row="2" Spacing="4" Padding="0,24,0,0"
+                             HorizontalOptions="Center">
+            <Label Text="{Binding TrackTitle}"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   LineBreakMode="TailTruncation"
+                   MaxLines="2" />
+            <Label Text="{Binding ArtistName}"
+                   FontSize="16"
+                   TextColor="Gray"
+                   HorizontalTextAlignment="Center"
+                   LineBreakMode="TailTruncation"
+                   MaxLines="1" />
+        </VerticalStackLayout>
+
+        <!-- Position Slider -->
+        <Grid Grid.Row="3" Padding="0,20,0,0" RowDefinitions="Auto,Auto">
+            <Slider x:Name="PositionSlider"
+                    Minimum="0"
+                    Maximum="{Binding DurationSeconds}"
+                    Value="{Binding PositionSeconds}"
+                    DragStarted="PositionSlider_DragStarted"
+                    DragCompleted="PositionSlider_DragCompleted" />
+            <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Text="{Binding PositionDisplay}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       HorizontalTextAlignment="Start" />
+                <Label Grid.Column="1"
+                       Text="{Binding DurationDisplay}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       HorizontalTextAlignment="End" />
+            </Grid>
+        </Grid>
+
+        <!-- Playback Controls -->
+        <HorizontalStackLayout Grid.Row="4"
+                               HorizontalOptions="Center"
+                               Spacing="32"
+                               Padding="0,16,0,0">
+            <!-- Stop -->
+            <Button Text="⏹"
+                    Command="{Binding StopCommand}"
+                    FontSize="32"
+                    BackgroundColor="Transparent"
+                    WidthRequest="64"
+                    HeightRequest="64"
+                    Padding="0"
+                    VerticalOptions="Center" />
+
+            <!-- Play / Pause -->
+            <Border StrokeThickness="0"
+                    BackgroundColor="{StaticResource Primary}"
+                    HeightRequest="72"
+                    WidthRequest="72"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="36" />
+                </Border.StrokeShape>
+                <Button Text="{Binding PlayPauseIcon}"
+                        Command="{Binding PlayPauseCommand}"
+                        FontSize="32"
+                        TextColor="White"
+                        BackgroundColor="Transparent"
+                        Padding="0"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center" />
+            </Border>
+        </HorizontalStackLayout>
+
+        <!-- Bottom spacer -->
+        <BoxView Grid.Row="5" HeightRequest="24" Color="Transparent" />
+    </Grid>
+</ContentPage>
+

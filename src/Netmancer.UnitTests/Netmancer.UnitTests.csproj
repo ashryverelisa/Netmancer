@@ -8,20 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.4"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="coverlet.collector" Version="6.0.4" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
         <PackageReference Include="NSubstitute" Version="5.3.0" />
-        <PackageReference Include="xunit" Version="2.9.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4"/>
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\Netmancer\Services\*.cs" Link="Services\%(Filename)%(Extension)"/>
-        <Compile Include="..\Netmancer\Models\*.cs" Link="Models\%(Filename)%(Extension)"/>
+        <Compile Include="..\Netmancer\Services\*.cs" Exclude="..\Netmancer\Services\AudioPlayerService.cs" Link="Services\%(Filename)%(Extension)" />
+        <Compile Include="..\Netmancer\Models\*.cs" Link="Models\%(Filename)%(Extension)" />
     </ItemGroup>
 
 </Project>
