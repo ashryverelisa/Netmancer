@@ -22,6 +22,12 @@ public partial class NowPlayingView : ContentPage
         _audioService.MediaCommandRequested += OnMediaCommandRequested;
 
         Player.MediaOpened += OnMediaOpened;
+
+        _viewModel.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(NowPlayingViewModel.Volume))
+                Player.Volume = _viewModel.Volume;
+        };
     }
 
     protected override void OnAppearing()

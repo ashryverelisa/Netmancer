@@ -18,7 +18,7 @@
         <ToolbarItem Text="Close" Command="{Binding GoBackCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto" Padding="24,16">
+    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" Padding="24,16">
 
         <!-- Hidden audio player -->
         <toolkit:MediaElement x:Name="Player"
@@ -141,8 +141,24 @@
                     VerticalOptions="Center" />
         </HorizontalStackLayout>
 
+        <!-- Volume Control -->
+        <Grid Grid.Row="5" Padding="24,16,24,0" ColumnDefinitions="Auto,*,Auto">
+            <Label Text="🔈"
+                   FontSize="16"
+                   VerticalTextAlignment="Center" />
+            <Slider Grid.Column="1"
+                    Minimum="0"
+                    Maximum="1"
+                    Value="{Binding Volume}"
+                    Margin="8,0" />
+            <Label Text="🔊"
+                   Grid.Column="2"
+                   FontSize="16"
+                   VerticalTextAlignment="Center" />
+        </Grid>
+
         <!-- Bottom spacer -->
-        <BoxView Grid.Row="5" HeightRequest="24" Color="Transparent" />
+        <BoxView Grid.Row="6" HeightRequest="24" Color="Transparent" />
     </Grid>
 </ContentPage>
 

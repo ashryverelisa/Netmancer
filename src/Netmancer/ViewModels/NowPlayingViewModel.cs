@@ -47,6 +47,9 @@ public partial class NowPlayingViewModel : ObservableObject
     public bool CanGoPrevious => _audioService.CanGoPrevious;
 
     [ObservableProperty]
+    public partial double Volume { get; set; } = 1.0;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PositionDisplay))]
     public partial double PositionSeconds { get; set; }
 
