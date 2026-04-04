@@ -22,7 +22,7 @@ public partial class NowPlayingView : ContentPage
         _positionTimer = Dispatcher.CreateTimer();
         _positionTimer.Interval = TimeSpan.FromMilliseconds(500);
         _positionTimer.Tick += (_, _) =>
-            _viewModel.UpdatePosition(
+            _viewModel.Position.Update(
                 Player.Position.TotalSeconds,
                 Player.Duration.TotalSeconds);
         _positionTimer.Start();
