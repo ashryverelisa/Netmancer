@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Netmancer.ViewModels"
              xmlns:converters="clr-namespace:Netmancer.Converters"
+             xmlns:behaviors="clr-namespace:Netmancer.Behaviors"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="Netmancer.Views.NowPlayingView"
              x:DataType="viewmodels:NowPlayingViewModel"
@@ -25,8 +26,14 @@
                               IsVisible="False"
                               HeightRequest="0"
                               WidthRequest="0"
-                              ShouldAutoPlay="False"
-                              ShouldShowPlaybackControls="False" />
+                              ShouldAutoPlay="{Binding AutoPlay}"
+                              ShouldShowPlaybackControls="False"
+                              Source="{Binding PlayerSource}"
+                              Volume="{Binding Volume}">
+            <toolkit:MediaElement.Behaviors>
+                <behaviors:MediaElementPlaybackBehavior />
+            </toolkit:MediaElement.Behaviors>
+        </toolkit:MediaElement>
 
         <!-- Album Art -->
         <Border Grid.Row="1"

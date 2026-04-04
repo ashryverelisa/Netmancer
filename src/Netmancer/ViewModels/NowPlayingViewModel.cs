@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Netmancer.Messages;
@@ -7,12 +8,11 @@ using Netmancer.Services;
 namespace Netmancer.ViewModels;
 
 public partial class NowPlayingViewModel : ObservableObject,
-    IRecipient<MediaCommandRequestedMessage>,
-    IRecipient<MediaOpenedMessage>
+    IRecipient<MediaCommandRequestedMessage>
 {
     private readonly IAudioPlayerService _audioService;
     private bool _isDragging;
-    private bool _playWhenReady;
+    private bool _isActive;
 
     public NowPlayingViewModel(IAudioPlayerService audioPlayerService)
     {
@@ -57,6 +57,17 @@ public partial class NowPlayingViewModel : ObservableObject,
     [ObservableProperty]
     public partial double Volume { get; set; } = 1.0;
 
+    /// <summary>
+    /// Bound to <c>MediaElement.ShouldAutoPlay</c>.
+    /// Set <c>true</c> before assigning <see cref="PlayerSource"/> so the
+    /// MediaElement starts playback automatically once the source is loaded.
+    /// </summary>
+    [ObservableProperty]
+    public partial bool AutoPlay { get; set; }
+
+    [ObservableProperty]
+    public partial MediaSource? PlayerSource { get; set; }
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PositionDisplay))]
     public partial double PositionSeconds { get; set; }
@@ -77,30 +88,29 @@ public partial class NowPlayingViewModel : ObservableObject,
             case MediaCommand.Play:
                 if (_audioService.SourceUrl is not null)
                 {
-                    _playWhenReady = true;
-                    WeakReferenceMessenger.Default.Send(
-                        new SetMediaSourceMessage(_audioService.SourceUrl));
+                    AutoPlay = true;
+
+                    // Only push the source to the MediaElement when the page
+                    // is visible (handler attached).  Otherwise Activate()
+                    // will pick it up when the page appears.
+                    if (_isActive)
+                        LoadSource(_audioService.SourceUrl);
                 }
                 break;
 
             case MediaCommand.Pause:
+                AutoPlay = false;
                 WeakReferenceMessenger.Default.Send(new PausePlaybackMessage());
                 break;
 
             case MediaCommand.Resume:
+                AutoPlay = true;
                 WeakReferenceMessenger.Default.Send(new StartPlaybackMessage());
                 break;
         }
     }
 
-    public void Receive(MediaOpenedMessage message)
-    {
-        if (!_playWhenReady) return;
-        _playWhenReady = false;
-        WeakReferenceMessenger.Default.Send(new StartPlaybackMessage());
-    }
-
-    // ── Called by the View on OnAppearing to sync initial state ─────────
+    // ── Called by the View on OnAppearing / OnDisappearing ─────────────
 
     /// <summary>
     /// Synchronises the MediaElement with the current service state when the
@@ -108,14 +118,21 @@ public partial class NowPlayingViewModel : ObservableObject,
     /// </summary>
     public void Activate()
     {
+        _isActive = true;
         _isDragging = false;
 
         if (_audioService.SourceUrl is null) return;
 
-        _playWhenReady = _audioService.IsPlaying;
-        WeakReferenceMessenger.Default.Send(
-            new SetMediaSourceMessage(_audioService.SourceUrl));
+        AutoPlay = _audioService.IsPlaying;
+        LoadSource(_audioService.SourceUrl);
     }
+
+    /// <summary>
+    /// Marks the page as inactive so messages don't try to push a source
+    /// before the MediaElement handler is attached.
+    /// Call from <c>OnDisappearing</c>.
+    /// </summary>
+    public void Deactivate() => _isActive = false;
 
     /// <summary>
     /// Called by the view's timer to push MediaElement position/duration
@@ -127,13 +144,6 @@ public partial class NowPlayingViewModel : ObservableObject,
         PositionSeconds = position;
         DurationSeconds = duration;
     }
-
-    // ── Partial property-changed hooks ─────────────────────────────────
-
-    partial void OnVolumeChanged(double value)
-        => WeakReferenceMessenger.Default.Send(new SetVolumeMessage(value));
-
-    // ── Commands ───────────────────────────────────────────────────────
 
     [RelayCommand]
     private void DragStarted() => _isDragging = true;
@@ -169,6 +179,17 @@ public partial class NowPlayingViewModel : ObservableObject,
     private async Task GoBack() => await Shell.Current.GoToAsync("..");
 
     // ── Helpers ─────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Resets <see cref="PlayerSource"/> to <c>null</c> first so the
+    /// MediaElement always sees a genuine property change, even when the
+    /// URL hasn't changed (e.g. navigating back to the same track).
+    /// </summary>
+    private void LoadSource(string url)
+    {
+        PlayerSource = null;
+        PlayerSource = MediaSource.FromUri(url);
+    }
 
     private static string FormatTime(double totalSeconds)
     {

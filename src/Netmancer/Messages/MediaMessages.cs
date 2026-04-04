@@ -9,32 +9,21 @@ namespace Netmancer.Messages;
 public sealed record MediaCommandRequestedMessage(MediaCommand Command);
 
 /// <summary>
-/// ViewModel → View: set the MediaElement source URL.
-/// </summary>
-public sealed record SetMediaSourceMessage(string Url);
-
-/// <summary>
 /// ViewModel → View: call Player.Play().
+/// Handled by <see cref="Behaviors.MediaElementPlaybackBehavior"/>.
 /// </summary>
 public sealed record StartPlaybackMessage;
 
 /// <summary>
 /// ViewModel → View: call Player.Pause().
+/// Handled by <see cref="Behaviors.MediaElementPlaybackBehavior"/>.
 /// </summary>
 public sealed record PausePlaybackMessage;
 
 /// <summary>
 /// ViewModel → View: seek to the given position.
+/// Handled by <see cref="Behaviors.MediaElementPlaybackBehavior"/>.
 /// </summary>
 public sealed record SeekToPositionMessage(double PositionSeconds);
 
-/// <summary>
-/// ViewModel → View: set the MediaElement volume.
-/// </summary>
-public sealed record SetVolumeMessage(double Volume);
-
-/// <summary>
-/// View → ViewModel: the MediaElement has finished loading and is ready to play.
-/// </summary>
-public sealed record MediaOpenedMessage;
 
