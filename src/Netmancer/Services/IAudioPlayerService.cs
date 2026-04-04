@@ -11,11 +11,13 @@ public interface IAudioPlayerService : INotifyPropertyChanged
     ContentItem? CurrentTrack { get; }
     bool IsPlaying { get; }
     bool HasTrack { get; }
+    bool CanGoNext { get; }
+    bool CanGoPrevious { get; }
 
     /// <summary>
-    /// Start playing the given audio item.
+    /// Start playing the given audio item, optionally within a playlist.
     /// </summary>
-    void Play(ContentItem item);
+    void Play(ContentItem item, IReadOnlyList<ContentItem>? playlist = null);
 
     /// <summary>
     /// Toggle between play and pause.
@@ -23,9 +25,14 @@ public interface IAudioPlayerService : INotifyPropertyChanged
     void PlayPause();
 
     /// <summary>
-    /// Stop playback and clear the current track.
+    /// Skip to the next track in the playlist.
     /// </summary>
-    void Stop();
+    void Next();
+
+    /// <summary>
+    /// Skip to the previous track in the playlist.
+    /// </summary>
+    void Previous();
 
     /// <summary>
     /// The MediaElement source URI — the view binds to this to drive the actual player.

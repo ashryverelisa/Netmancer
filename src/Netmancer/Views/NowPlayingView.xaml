@@ -100,9 +100,9 @@
                                HorizontalOptions="Center"
                                Spacing="32"
                                Padding="0,16,0,0">
-            <!-- Stop -->
-            <Button Text="⏹"
-                    Command="{Binding StopCommand}"
+            <!-- Previous -->
+            <Button Text="⏮"
+                    Command="{Binding PreviousCommand}"
                     FontSize="32"
                     BackgroundColor="Transparent"
                     WidthRequest="64"
@@ -129,6 +129,16 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Center" />
             </Border>
+
+            <!-- Next -->
+            <Button Text="⏭"
+                    Command="{Binding NextCommand}"
+                    FontSize="32"
+                    BackgroundColor="Transparent"
+                    WidthRequest="64"
+                    HeightRequest="64"
+                    Padding="0"
+                    VerticalOptions="Center" />
         </HorizontalStackLayout>
 
         <!-- Bottom spacer -->

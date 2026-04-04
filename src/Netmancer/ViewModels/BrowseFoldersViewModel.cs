@@ -57,7 +57,12 @@ public partial class BrowseFoldersViewModel(
         {
             if (item.MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase))
             {
-                audioPlayerService.Play(item);
+                var audioItems = Items
+                    .Where(i => !i.IsContainer &&
+                                i.MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase) &&
+                                !string.IsNullOrEmpty(i.ResourceUrl))
+                    .ToList();
+                audioPlayerService.Play(item, audioItems);
                 await Shell.Current.GoToAsync("NowPlaying");
             }
             else

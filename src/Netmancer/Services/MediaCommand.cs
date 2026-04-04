@@ -4,7 +4,6 @@ public enum MediaCommand
 {
     Play,
     Pause,
-    Resume,
-    Stop
+    Resume
 }
 

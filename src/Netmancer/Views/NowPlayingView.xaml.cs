@@ -87,10 +87,7 @@ public partial class NowPlayingView : ContentPage
                 case MediaCommand.Resume:
                     Player.Play();
                     break;
-                case MediaCommand.Stop:
-                    Player.Stop();
-                    Player.Source = null;
-                    break;
+
             }
         });
     }

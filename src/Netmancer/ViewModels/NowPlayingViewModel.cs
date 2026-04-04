@@ -25,6 +25,14 @@ public partial class NowPlayingViewModel : ObservableObject
                     OnPropertyChanged(nameof(IsPlaying));
                     OnPropertyChanged(nameof(PlayPauseIcon));
                     break;
+                case nameof(IAudioPlayerService.CanGoNext):
+                    OnPropertyChanged(nameof(CanGoNext));
+                    NextCommand.NotifyCanExecuteChanged();
+                    break;
+                case nameof(IAudioPlayerService.CanGoPrevious):
+                    OnPropertyChanged(nameof(CanGoPrevious));
+                    PreviousCommand.NotifyCanExecuteChanged();
+                    break;
             }
         };
     }
@@ -35,6 +43,8 @@ public partial class NowPlayingViewModel : ObservableObject
     public bool IsPlaying => _audioService.IsPlaying;
     public bool IsVisible => _audioService.HasTrack;
     public string PlayPauseIcon => _audioService.IsPlaying ? "⏸" : "▶";
+    public bool CanGoNext => _audioService.CanGoNext;
+    public bool CanGoPrevious => _audioService.CanGoPrevious;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PositionDisplay))]
@@ -59,10 +69,18 @@ public partial class NowPlayingViewModel : ObservableObject
     [RelayCommand]
     private void PlayPause() => _audioService.PlayPause();
 
-    [RelayCommand]
-    private void Stop()
+    [RelayCommand(CanExecute = nameof(CanGoPrevious))]
+    private void Previous()
     {
-        _audioService.Stop();
+        _audioService.Previous();
+        PositionSeconds = 0;
+        DurationSeconds = 0;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoNext))]
+    private void Next()
+    {
+        _audioService.Next();
         PositionSeconds = 0;
         DurationSeconds = 0;
     }
