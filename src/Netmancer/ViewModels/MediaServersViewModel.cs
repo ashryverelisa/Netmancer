@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Netmancer.Models;
@@ -13,18 +16,28 @@ public partial class MediaServersViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsSearching { get; set; }
 
+    [ObservableProperty]
+    public partial string? ErrorMessage { get; set; }
+
     [RelayCommand]
     private async Task Search()
     {
         IsSearching = true;
+        ErrorMessage = null;
         Devices.Clear();
 
         try
         {
+            var localAddresses = GetLocalIpv4Addresses();
+
+            if (localAddresses.Count == 0)
+            {
+                ErrorMessage = "No network connection found. Please connect to a Wi-Fi network and try again.";
+                return;
+            }
+
             using var deviceLocator = new AggregateSsdpDeviceLocator(
-                includeIpv4: true,
-                includeIpv6: false,
-                adapterFilter: null,
+                localIpAddresses: localAddresses,
                 logger: null);
 
             var foundDevices = await deviceLocator.SearchAsync("upnp:rootdevice", TimeSpan.FromSeconds(5));
@@ -74,5 +87,41 @@ public partial class MediaServersViewModel : ObservableObject
         };
 
         await Shell.Current.GoToAsync("BrowseFolders", parameters);
+    }
+
+    private static List<string> GetLocalIpv4Addresses()
+    {
+        var addresses = new List<string>();
+
+        try
+        {
+            foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (networkInterface.OperationalStatus != OperationalStatus.Up)
+                    continue;
+
+                if (networkInterface.NetworkInterfaceType is
+                    NetworkInterfaceType.Loopback or
+                    NetworkInterfaceType.Tunnel)
+                    continue;
+
+                var properties = networkInterface.GetIPProperties();
+
+                foreach (var unicast in properties.UnicastAddresses)
+                {
+                    if (unicast.Address.AddressFamily == AddressFamily.InterNetwork &&
+                        !IPAddress.IsLoopback(unicast.Address))
+                    {
+                        addresses.Add(unicast.Address.ToString());
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // NetworkInterface enumeration can fail on some platforms; fall through to empty list.
+        }
+
+        return addresses;
     }
 }
