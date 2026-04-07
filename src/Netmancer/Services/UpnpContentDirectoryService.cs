@@ -130,7 +130,7 @@ public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDi
         }
     }
 
-    internal (List<ContentItem> Items, int NumberReturned, int TotalMatches) ParseBrowseResponse(string responseXml)
+    private (List<ContentItem> Items, int NumberReturned, int TotalMatches) ParseBrowseResponse(string responseXml)
     {
         var items = new List<ContentItem>();
         var numberReturned = 0;
