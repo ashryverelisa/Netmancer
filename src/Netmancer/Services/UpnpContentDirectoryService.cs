@@ -10,6 +10,8 @@ public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDi
     private static readonly XNamespace _dcNs = "http://purl.org/dc/elements/1.1/";
     private static readonly XNamespace _upnpNs = "urn:schemas-upnp-org:metadata-1-0/upnp/";
 
+    private const int MaxRetries = 2;
+
     /// <summary>
     /// Browses the children of the given object ID on the device at <paramref name="descriptionLocation"/>.
     /// Pass objectId "0" for the root container.
@@ -43,14 +45,9 @@ public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDi
                 </s:Envelope>
                 """;
 
-            var request = new HttpRequestMessage(HttpMethod.Post, controlUrl)
-            {
-                Content = new StringContent(soapBody, System.Text.Encoding.UTF8, "text/xml")
-            };
-            request.Headers.Add("SOAPAction", "\"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"");
-
-            using var response = await httpClient.SendAsync(request);
-            var responseBody = await response.Content.ReadAsStringAsync();
+            var responseBody = await SendSoapRequestWithRetryAsync(controlUrl, soapBody);
+            if (responseBody is null)
+                break;
 
             var (items, numberReturned, totalMatches) = ParseBrowseResponse(responseBody);
             allItems.AddRange(items);
@@ -66,6 +63,40 @@ public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDi
         }
 
         return allItems;
+    }
+
+    /// <summary>
+    /// Sends a SOAP request to the given <paramref name="controlUrl"/> with
+    /// automatic retry for transient HTTP errors (e.g. premature connection close).
+    /// </summary>
+    private async Task<string?> SendSoapRequestWithRetryAsync(Uri controlUrl, string soapBody)
+    {
+        for (var attempt = 0; attempt <= MaxRetries; attempt++)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, controlUrl)
+                {
+                    Content = new StringContent(soapBody, System.Text.Encoding.UTF8, "text/xml")
+                };
+                request.Headers.Add("SOAPAction",
+                    "\"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"");
+
+                using var response = await httpClient.SendAsync(request);
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (HttpRequestException) when (attempt < MaxRetries)
+            {
+                // Transient failure — wait briefly, then retry
+                await Task.Delay(250 * (attempt + 1));
+            }
+            catch (TaskCanceledException) when (attempt < MaxRetries)
+            {
+                await Task.Delay(250 * (attempt + 1));
+            }
+        }
+
+        return null;
     }
 
     private async Task<Uri?> GetContentDirectoryControlUrlAsync(Uri descriptionLocation)

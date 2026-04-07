@@ -14,9 +14,41 @@
     <ContentPage.Resources>
         <converters:InvertBoolConverter x:Key="InvertBoolConverter" />
         <converters:IsNullConverter x:Key="IsNullConverter" />
+        <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
     </ContentPage.Resources>
 
     <Grid RowDefinitions="*,Auto">
+
+        <!-- Loading indicator -->
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           Color="{StaticResource Accent}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center" />
+
+        <!-- Error message -->
+        <VerticalStackLayout Grid.Row="0"
+                             IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="12"
+                             Padding="24">
+            <Label Text="⚠️"
+                   FontSize="48"
+                   HorizontalTextAlignment="Center" />
+            <Label Text="{Binding ErrorMessage}"
+                   FontSize="14"
+                   TextColor="{StaticResource TextSecondary}"
+                   HorizontalTextAlignment="Center" />
+            <Button Text="Retry"
+                    Command="{Binding LoadFoldersCommand}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource White}"
+                    CornerRadius="8"
+                    HorizontalOptions="Center"
+                    Padding="24,8" />
+        </VerticalStackLayout>
 
         <!-- Content List -->
         <CollectionView Grid.Row="0"

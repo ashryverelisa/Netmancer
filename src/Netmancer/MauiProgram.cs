@@ -33,8 +33,18 @@ public static class MauiProgram
     private static void AddViewsAndViewModels(IServiceCollection services)
     {
         // Services
-        services.AddHttpClient();
-        services.AddSingleton<IUpnpContentDirectoryService, UpnpContentDirectoryService>();
+        services.AddHttpClient<IUpnpContentDirectoryService, UpnpContentDirectoryService>(client =>
+        {
+            // Many UPnP devices mishandle HTTP/1.1 keep-alive, causing
+            // "response ended prematurely" errors.  Close after each request.
+            client.DefaultRequestHeaders.ConnectionClose = true;
+            client.Timeout = TimeSpan.FromSeconds(15);
+        })
+        .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            // Avoid pooling connections to flaky UPnP devices
+            MaxConnectionsPerServer = 4,
+        });
         services.AddSingleton<IAudioPlayerService, AudioPlayerService>();
 
         // ViewModels
