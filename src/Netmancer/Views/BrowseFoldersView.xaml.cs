@@ -6,11 +6,12 @@ public partial class BrowseFoldersView : ContentPage
 {
     private readonly BrowseFoldersViewModel _viewModel;
 
-    public BrowseFoldersView(BrowseFoldersViewModel viewModel)
+    public BrowseFoldersView(BrowseFoldersViewModel viewModel, MiniPlayerViewModel miniPlayerViewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = _viewModel;
+        MiniPlayer.BindingContext = miniPlayerViewModel;
     }
 
     protected override async void OnAppearing()
@@ -21,4 +22,3 @@ public partial class BrowseFoldersView : ContentPage
             await _viewModel.LoadFoldersCommand.ExecuteAsync(null);
     }
 }
-

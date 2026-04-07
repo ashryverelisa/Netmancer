@@ -10,41 +10,52 @@ public partial class MediaServersViewModel : ObservableObject
 {
     public ObservableCollection<MediaDevice> Devices { get; } = [];
 
+    [ObservableProperty]
+    public partial bool IsSearching { get; set; }
+
     [RelayCommand]
     private async Task Search()
     {
+        IsSearching = true;
         Devices.Clear();
 
-        using var deviceLocator = new AggregateSsdpDeviceLocator(
-            includeIpv4: true,
-            includeIpv6: false,
-            adapterFilter: null,
-            logger: null);
-
-        var foundDevices = await deviceLocator.SearchAsync("upnp:rootdevice", TimeSpan.FromSeconds(5));
-
-        foreach (var device in foundDevices)
+        try
         {
-            try
-            {
-                var deviceInfo = await device.GetDeviceInfo();
-                var friendlyName = deviceInfo.FriendlyName;
+            using var deviceLocator = new AggregateSsdpDeviceLocator(
+                includeIpv4: true,
+                includeIpv6: false,
+                adapterFilter: null,
+                logger: null);
 
-                if (!string.IsNullOrEmpty(friendlyName) &&
-                    device.DescriptionLocation is not null &&
-                    Devices.All(d => d.DescriptionLocation != device.DescriptionLocation))
+            var foundDevices = await deviceLocator.SearchAsync("upnp:rootdevice", TimeSpan.FromSeconds(5));
+
+            foreach (var device in foundDevices)
+            {
+                try
                 {
-                    Devices.Add(new MediaDevice
+                    var deviceInfo = await device.GetDeviceInfo();
+                    var friendlyName = deviceInfo.FriendlyName;
+
+                    if (!string.IsNullOrEmpty(friendlyName) &&
+                        device.DescriptionLocation is not null &&
+                        Devices.All(d => d.DescriptionLocation != device.DescriptionLocation))
                     {
-                        FriendlyName = friendlyName,
-                        DescriptionLocation = device.DescriptionLocation
-                    });
+                        Devices.Add(new MediaDevice
+                        {
+                            FriendlyName = friendlyName,
+                            DescriptionLocation = device.DescriptionLocation
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+                    // Device info retrieval failed — skip this device
                 }
             }
-            catch (Exception)
-            {
-                // Device info retrieval failed — skip this device
-            }
+        }
+        finally
+        {
+            IsSearching = false;
         }
     }
 

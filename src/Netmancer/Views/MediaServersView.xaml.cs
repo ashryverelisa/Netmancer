@@ -6,11 +6,12 @@ public partial class MediaServersView : ContentPage
 {
     private readonly MediaServersViewModel _mediaServersViewModel;
 
-    public MediaServersView(MediaServersViewModel mediaServersViewModel)
+    public MediaServersView(MediaServersViewModel mediaServersViewModel, MiniPlayerViewModel miniPlayerViewModel)
     {
         InitializeComponent();
         _mediaServersViewModel = mediaServersViewModel;
         BindingContext = _mediaServersViewModel;
+        MiniPlayer.BindingContext = miniPlayerViewModel;
     }
 
     protected override async void OnAppearing()

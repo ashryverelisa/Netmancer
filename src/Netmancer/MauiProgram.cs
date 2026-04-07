@@ -41,6 +41,7 @@ public static class MauiProgram
         services.AddSingleton<MediaServersViewModel>();
         services.AddTransient<BrowseFoldersViewModel>();
         services.AddSingleton<NowPlayingViewModel>();
+        services.AddSingleton<MiniPlayerViewModel>();
 
         // Views / Shell
         services.AddSingleton<AppShell>();

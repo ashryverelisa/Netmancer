@@ -9,6 +9,7 @@
              x:Class="Netmancer.Views.NowPlayingView"
              x:DataType="viewmodels:NowPlayingViewModel"
              Title="Now Playing"
+             BackgroundColor="{StaticResource DarkBackground}"
              Shell.PresentationMode="ModalAnimated">
 
     <ContentPage.Resources>
@@ -16,7 +17,7 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Close" Command="{Binding GoBackCommand}" />
+        <ToolbarItem Text="✕" Command="{Binding GoBackCommand}" />
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" Padding="24,16">
@@ -41,12 +42,13 @@
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 MaximumHeightRequest="320"
-                MaximumWidthRequest="320">
+                MaximumWidthRequest="320"
+                BackgroundColor="{StaticResource DarkCardBackground}">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="16" />
             </Border.StrokeShape>
             <Border.Shadow>
-                <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.3" />
+                <Shadow Brush="Black" Offset="0,8" Radius="24" Opacity="0.5" />
             </Border.Shadow>
             <Grid HeightRequest="300" WidthRequest="300">
                 <!-- Fallback: music note when no album art -->
@@ -54,6 +56,7 @@
                        FontSize="100"
                        HorizontalTextAlignment="Center"
                        VerticalTextAlignment="Center"
+                       TextColor="{StaticResource TextMuted}"
                        IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
                 <!-- Album art image -->
                 <Image Source="{Binding AlbumArtUri}"
@@ -69,12 +72,13 @@
             <Label Text="{Binding TrackTitle}"
                    FontSize="22"
                    FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
                    HorizontalTextAlignment="Center"
                    LineBreakMode="TailTruncation"
                    MaxLines="2" />
             <Label Text="{Binding ArtistName}"
                    FontSize="16"
-                   TextColor="Gray"
+                   TextColor="{StaticResource TextSecondary}"
                    HorizontalTextAlignment="Center"
                    LineBreakMode="TailTruncation"
                    MaxLines="1" />
@@ -85,7 +89,10 @@
             <Slider x:Name="PositionSlider"
                     Minimum="0"
                     Maximum="{Binding Position.DurationSeconds}"
-                    Value="{Binding Position.PositionSeconds}">
+                    Value="{Binding Position.PositionSeconds}"
+                    MinimumTrackColor="{StaticResource Accent}"
+                    MaximumTrackColor="{StaticResource DarkCardBackground}"
+                    ThumbColor="{StaticResource Accent}">
                 <Slider.Behaviors>
                     <toolkit:EventToCommandBehavior EventName="DragStarted"
                                                     Command="{Binding Position.DragStartedCommand}" />
@@ -97,12 +104,12 @@
                 <Label Grid.Column="0"
                        Text="{Binding Position.PositionDisplay}"
                        FontSize="12"
-                       TextColor="Gray"
+                       TextColor="{StaticResource TextSecondary}"
                        HorizontalTextAlignment="Start" />
                 <Label Grid.Column="1"
                        Text="{Binding Position.DurationDisplay}"
                        FontSize="12"
-                       TextColor="Gray"
+                       TextColor="{StaticResource TextSecondary}"
                        HorizontalTextAlignment="End" />
             </Grid>
         </Grid>
@@ -116,6 +123,7 @@
             <Button Text="⏮"
                     Command="{Binding PreviousCommand}"
                     FontSize="32"
+                    TextColor="{StaticResource TextPrimary}"
                     BackgroundColor="Transparent"
                     WidthRequest="64"
                     HeightRequest="64"
@@ -124,7 +132,7 @@
 
             <!-- Play / Pause -->
             <Border StrokeThickness="0"
-                    BackgroundColor="{StaticResource Primary}"
+                    BackgroundColor="{StaticResource Accent}"
                     HeightRequest="72"
                     WidthRequest="72"
                     HorizontalOptions="Center"
@@ -132,10 +140,13 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="36" />
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="{StaticResource Accent}" Offset="0,4" Radius="16" Opacity="0.4" />
+                </Border.Shadow>
                 <Button Text="{Binding PlayPauseIcon}"
                         Command="{Binding PlayPauseCommand}"
                         FontSize="32"
-                        TextColor="White"
+                        TextColor="{StaticResource White}"
                         BackgroundColor="Transparent"
                         Padding="0"
                         VerticalOptions="Center"
@@ -146,6 +157,7 @@
             <Button Text="⏭"
                     Command="{Binding NextCommand}"
                     FontSize="32"
+                    TextColor="{StaticResource TextPrimary}"
                     BackgroundColor="Transparent"
                     WidthRequest="64"
                     HeightRequest="64"
@@ -154,18 +166,23 @@
         </HorizontalStackLayout>
 
         <!-- Volume Control -->
-        <Grid Grid.Row="5" Padding="24,16,24,0" ColumnDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="5" Padding="24,20,24,0" ColumnDefinitions="Auto,*,Auto">
             <Label Text="🔈"
                    FontSize="16"
+                   TextColor="{StaticResource TextSecondary}"
                    VerticalTextAlignment="Center" />
             <Slider Grid.Column="1"
                     Minimum="0"
                     Maximum="1"
                     Value="{Binding Volume}"
-                    Margin="8,0" />
+                    Margin="8,0"
+                    MinimumTrackColor="{StaticResource Accent}"
+                    MaximumTrackColor="{StaticResource DarkCardBackground}"
+                    ThumbColor="{StaticResource Accent}" />
             <Label Text="🔊"
                    Grid.Column="2"
                    FontSize="16"
+                   TextColor="{StaticResource TextSecondary}"
                    VerticalTextAlignment="Center" />
         </Grid>
 

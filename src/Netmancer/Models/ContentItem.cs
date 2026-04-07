@@ -23,6 +23,11 @@ public class ContentItem
     public string? AlbumArtUri { get; init; }
 
     /// <summary>
+    /// Whether album art is available for display.
+    /// </summary>
+    public bool HasAlbumArt => !string.IsNullOrEmpty(AlbumArtUri);
+
+    /// <summary>
     /// UPnP class, e.g. "object.item.audioItem.musicTrack", "object.item.videoItem", etc.
     /// </summary>
     public string MediaClass { get; init; } = string.Empty;
@@ -42,7 +47,8 @@ public class ContentItem
     /// </summary>
     public string Subtitle =>
         IsContainer ? "" :
-        MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase) ? "Audio" :
+        MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase)
+            ? (!string.IsNullOrEmpty(Artist) ? Artist : "Audio") :
         MediaClass.Contains("video", StringComparison.OrdinalIgnoreCase) ? "Video" :
         MediaClass.Contains("image", StringComparison.OrdinalIgnoreCase) ? "Image" :
         "File";
