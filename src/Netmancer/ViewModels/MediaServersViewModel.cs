@@ -36,8 +36,12 @@ public partial class MediaServersViewModel : ObservableObject
                     var deviceInfo = await device.GetDeviceInfo();
                     var friendlyName = deviceInfo.FriendlyName;
 
+                    var host = device.DescriptionLocation?.Host ?? string.Empty;
+                    var isGateway = host.EndsWith(".1");
+
                     if (!string.IsNullOrEmpty(friendlyName) &&
                         device.DescriptionLocation is not null &&
+                        !isGateway &&
                         Devices.All(d => d.DescriptionLocation != device.DescriptionLocation))
                     {
                         Devices.Add(new MediaDevice
