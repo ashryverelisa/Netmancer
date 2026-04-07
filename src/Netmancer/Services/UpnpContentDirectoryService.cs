@@ -117,8 +117,8 @@ public class UpnpContentDirectoryService(HttpClient httpClient) : IUpnpContentDi
             if (controlPath is null)
                 return null;
 
-            // controlURL can be absolute or relative
-            if (Uri.TryCreate(controlPath, UriKind.Absolute, out var absoluteUri))
+            if (Uri.TryCreate(controlPath, UriKind.Absolute, out var absoluteUri)
+                && absoluteUri.Scheme is "http" or "https")
                 return absoluteUri;
 
             var baseUri = new Uri($"{descriptionLocation.Scheme}://{descriptionLocation.Authority}");

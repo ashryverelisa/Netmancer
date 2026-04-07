@@ -35,15 +35,13 @@ public static class MauiProgram
         // Services
         services.AddHttpClient<IUpnpContentDirectoryService, UpnpContentDirectoryService>(client =>
         {
-            // Many UPnP devices mishandle HTTP/1.1 keep-alive, causing
-            // "response ended prematurely" errors.  Close after each request.
             client.DefaultRequestHeaders.ConnectionClose = true;
             client.Timeout = TimeSpan.FromSeconds(15);
         })
-        .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
         {
-            // Avoid pooling connections to flaky UPnP devices
             MaxConnectionsPerServer = 4,
+            PooledConnectionLifetime = TimeSpan.Zero,
         });
         services.AddSingleton<IAudioPlayerService, AudioPlayerService>();
 
