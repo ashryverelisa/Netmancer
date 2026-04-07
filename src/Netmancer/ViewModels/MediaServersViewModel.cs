@@ -6,6 +6,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Netmancer.Models;
 using Rssdp;
+#if ANDROID
+using Android.Content;
+using Android.Net.Wifi;
+#endif
 
 namespace Netmancer.ViewModels;
 
@@ -36,38 +40,55 @@ public partial class MediaServersViewModel : ObservableObject
                 return;
             }
 
-            using var deviceLocator = new AggregateSsdpDeviceLocator(
-                localIpAddresses: localAddresses,
-                logger: null);
-
-            var foundDevices = await deviceLocator.SearchAsync("upnp:rootdevice", TimeSpan.FromSeconds(5));
-
-            foreach (var device in foundDevices)
+#if ANDROID
+            // Android filters out multicast packets by default to save battery.
+            // We must acquire a Wi-Fi MulticastLock for SSDP discovery to work.
+            var wifiManager = (WifiManager?)Android.App.Application.Context.GetSystemService(Context.WifiService);
+            var multicastLock = wifiManager?.CreateMulticastLock("ssdp_discovery");
+            multicastLock?.Acquire();
+#endif
+            try
             {
-                try
+                using var deviceLocator = new AggregateSsdpDeviceLocator(
+                    localIpAddresses: localAddresses,
+                    logger: null);
+
+                var foundDevices = await deviceLocator.SearchAsync("upnp:rootdevice", TimeSpan.FromSeconds(5));
+
+                foreach (var device in foundDevices)
                 {
-                    var deviceInfo = await device.GetDeviceInfo();
-                    var friendlyName = deviceInfo.FriendlyName;
-
-                    var host = device.DescriptionLocation?.Host ?? string.Empty;
-                    var isGateway = host.EndsWith(".1");
-
-                    if (!string.IsNullOrEmpty(friendlyName) &&
-                        device.DescriptionLocation is not null &&
-                        !isGateway &&
-                        Devices.All(d => d.DescriptionLocation != device.DescriptionLocation))
+                    try
                     {
-                        Devices.Add(new MediaDevice
+                        var deviceInfo = await device.GetDeviceInfo();
+                        var friendlyName = deviceInfo.FriendlyName;
+
+                        var host = device.DescriptionLocation?.Host ?? string.Empty;
+                        var isGateway = host.EndsWith(".1");
+
+                        if (!string.IsNullOrEmpty(friendlyName) &&
+                            device.DescriptionLocation is not null &&
+                            !isGateway &&
+                            Devices.All(d => d.DescriptionLocation != device.DescriptionLocation))
                         {
-                            FriendlyName = friendlyName,
-                            DescriptionLocation = device.DescriptionLocation
-                        });
+                            Devices.Add(new MediaDevice
+                            {
+                                FriendlyName = friendlyName,
+                                DescriptionLocation = device.DescriptionLocation
+                            });
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Device info retrieval failed — skip this device
                     }
                 }
-                catch (Exception)
-                {
-                    // Device info retrieval failed — skip this device
-                }
+            }
+            finally
+            {
+#if ANDROID
+                if (multicastLock is { IsHeld: true })
+                    multicastLock.Release();
+#endif
             }
         }
         finally
