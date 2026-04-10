@@ -4,15 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Netmancer.ViewModels"
              xmlns:models="using:Netmancer.Models"
-             xmlns:conv="using:Netmancer.Converters"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="700"
              x:Class="Netmancer.Views.MediaServersView"
              x:DataType="vm:MediaServersViewModel">
-
-    <UserControl.Resources>
-        <conv:IsNullConverter x:Key="IsNullConverter" />
-        <conv:IsNotNullConverter x:Key="IsNotNullConverter" />
-    </UserControl.Resources>
 
     <DockPanel>
         <!-- Custom Header -->
