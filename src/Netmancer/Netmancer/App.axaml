@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Netmancer"
              x:Class="Netmancer.App"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Dark">
 
     <Application.DataTemplates>
         <local:ViewLocator/>
@@ -11,4 +11,25 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Dark theme color palette (matching the MAUI design) -->
+            <Color x:Key="DarkBackground">#0F0F0F</Color>
+            <Color x:Key="DarkCardBackground">#1A1A2E</Color>
+            <Color x:Key="DarkSurface">#16213E</Color>
+            <Color x:Key="Accent">#00BFA5</Color>
+            <Color x:Key="TextPrimary">#E8E8E8</Color>
+            <Color x:Key="TextSecondary">#9E9E9E</Color>
+            <Color x:Key="TextMuted">#616161</Color>
+
+            <SolidColorBrush x:Key="DarkBackgroundBrush" Color="{StaticResource DarkBackground}" />
+            <SolidColorBrush x:Key="DarkCardBackgroundBrush" Color="{StaticResource DarkCardBackground}" />
+            <SolidColorBrush x:Key="DarkSurfaceBrush" Color="{StaticResource DarkSurface}" />
+            <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource Accent}" />
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}" />
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}" />
+            <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMuted}" />
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
