@@ -5,6 +5,7 @@
              xmlns:vm="using:Netmancer.ViewModels"
              xmlns:models="using:Netmancer.Models"
              xmlns:conv="using:Netmancer.Converters"
+             xmlns:helpers="using:Netmancer.Helpers"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="700"
              x:Class="Netmancer.Views.BrowseFoldersView"
              x:DataType="vm:BrowseFoldersViewModel">
@@ -107,7 +108,7 @@
                                                VerticalAlignment="Center"
                                                IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
                                     <!-- Album art thumbnail -->
-                                    <Image Source="{Binding AlbumArtUri}"
+                                    <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
                                            Stretch="UniformToFill"
                                            Height="44" Width="44"
                                            IsVisible="{Binding HasAlbumArt}" />

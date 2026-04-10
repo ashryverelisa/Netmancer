@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Netmancer.ViewModels"
              xmlns:conv="using:Netmancer.Converters"
+             xmlns:helpers="using:Netmancer.Helpers"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="80"
              x:Class="Netmancer.Views.MiniPlayerView"
              x:DataType="vm:MiniPlayerViewModel"
@@ -34,7 +35,7 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
-                    <Image Source="{Binding AlbumArtUri}"
+                    <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
                            Stretch="UniformToFill"
                            Height="48" Width="48"
                            IsVisible="{Binding HasAlbumArt}" />

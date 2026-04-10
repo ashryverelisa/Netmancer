@@ -5,6 +5,7 @@
              xmlns:vm="using:Netmancer.ViewModels"
              xmlns:models="using:Netmancer.Models"
              xmlns:conv="using:Netmancer.Converters"
+             xmlns:helpers="using:Netmancer.Helpers"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="700"
              x:Class="Netmancer.Views.NowPlayingView"
              x:DataType="vm:NowPlayingViewModel">
@@ -62,7 +63,7 @@
                     Background="{DynamicResource DarkCardBackgroundBrush}"
                     BoxShadow="0 8 24 0 #80000000">
                 <Panel Height="260" Width="260">
-                    <Image Source="{Binding AlbumArtUri}"
+                    <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
                            Stretch="UniformToFill"
                            Height="260" Width="260" />
                     <!-- Fallback: music note when no album art -->
