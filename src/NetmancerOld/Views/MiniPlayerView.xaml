@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:NetmancerOld.ViewModels"
+             xmlns:converters="clr-namespace:NetmancerOld.Converters"
+             x:Class="NetmancerOld.Views.MiniPlayerView"
+             x:DataType="viewmodels:MiniPlayerViewModel"
+             IsVisible="{Binding IsVisible}">
+
+    <ContentView.Resources>
+        <converters:IsNullConverter x:Key="IsNullConverter" />
+        <converters:InvertBoolConverter x:Key="InvertBoolConverter" />
+    </ContentView.Resources>
+
+    <Border BackgroundColor="{StaticResource DarkSurface}"
+            Padding="0"
+            Margin="8,4,8,8"
+            StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12" />
+        </Border.StrokeShape>
+        <Border.Shadow>
+            <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.4" />
+        </Border.Shadow>
+
+        <Grid ColumnDefinitions="56,*,48"
+              HeightRequest="64"
+              Padding="8,8,4,8">
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding OpenNowPlayingCommand}" />
+            </Grid.GestureRecognizers>
+
+            <!-- Album Art Thumbnail -->
+            <Border Grid.Column="0"
+                    StrokeThickness="0"
+                    HeightRequest="48"
+                    WidthRequest="48"
+                    BackgroundColor="{StaticResource DarkCardBackground}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <Grid>
+                    <Label Text="🎵"
+                           FontSize="22"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"
+                           IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
+                    <Image Source="{Binding AlbumArtUri}"
+                           Aspect="AspectFill"
+                           HeightRequest="48"
+                           WidthRequest="48"
+                           IsVisible="{Binding HasAlbumArt}" />
+                </Grid>
+            </Border>
+
+            <!-- Track Info -->
+            <VerticalStackLayout Grid.Column="1"
+                                 VerticalOptions="Center"
+                                 Padding="12,0,0,0"
+                                 Spacing="2">
+                <Label Text="{Binding TrackTitle}"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1" />
+                <Label Text="{Binding ArtistName}"
+                       FontSize="12"
+                       TextColor="{StaticResource TextSecondary}"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1" />
+            </VerticalStackLayout>
+
+            <!-- Play/Pause Button -->
+            <Button Grid.Column="2"
+                    Text="{Binding PlayPauseIcon}"
+                    Command="{Binding PlayPauseCommand}"
+                    FontSize="20"
+                    TextColor="{StaticResource Accent}"
+                    BackgroundColor="Transparent"
+                    Padding="0"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center" />
+        </Grid>
+    </Border>
+</ContentView>
+
+
