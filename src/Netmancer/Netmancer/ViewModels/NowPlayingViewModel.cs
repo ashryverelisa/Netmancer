@@ -13,7 +13,7 @@ public partial class NowPlayingViewModel : ViewModelBase
         [nameof(IAudioPlayerService.CurrentTrack)] =
             [nameof(TrackTitle), nameof(ArtistName), nameof(AlbumArtUri), nameof(IsVisible)],
         [nameof(IAudioPlayerService.IsPlaying)] =
-            [nameof(IsPlaying), nameof(PlayPauseIcon)],
+            [nameof(IsPlaying)],
         [nameof(IAudioPlayerService.CanGoNext)]     = [nameof(CanGoNext)],
         [nameof(IAudioPlayerService.CanGoPrevious)] = [nameof(CanGoPrevious)],
     };
@@ -42,7 +42,6 @@ public partial class NowPlayingViewModel : ViewModelBase
     public string? AlbumArtUri => _audioService.CurrentTrack?.AlbumArtUri;
     public bool IsPlaying      => _audioService.IsPlaying;
     public bool IsVisible      => _audioService.HasTrack;
-    public string PlayPauseIcon => IsPlaying ? "⏸" : "▶";
     public bool CanGoNext      => _audioService.CanGoNext;
     public bool CanGoPrevious  => _audioService.CanGoPrevious;
 

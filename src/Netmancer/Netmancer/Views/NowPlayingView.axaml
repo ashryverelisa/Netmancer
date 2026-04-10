@@ -56,12 +56,12 @@
                     ClipToBounds="True"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    MaxHeight="280"
-                    MaxWidth="280"
+                    MaxHeight="300"
+                    MaxWidth="300"
                     Margin="0,8,0,0"
                     Background="{DynamicResource DarkCardBackgroundBrush}"
                     BoxShadow="0 8 24 0 #80000000">
-                <Panel Height="260" Width="260">
+                <Panel Height="300" Width="300">
                     <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
                            Stretch="UniformToFill"
                            Height="260" Width="260" />
@@ -140,27 +140,22 @@
                 </Button>
 
                 <!-- Play / Pause -->
-                <Border Grid.Column="2"
-                        Background="{DynamicResource AccentBrush}"
-                        Height="72" Width="72"
-                        CornerRadius="36"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        BoxShadow="0 4 20 0 #8000BFA5">
-                    <Button Content="{Binding PlayPauseIcon}"
-                            Command="{Binding PlayPauseCommand}"
-                            FontSize="32"
-                            Foreground="White"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Padding="0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Width="72" Height="72" >
-                    </Button>
-                </Border>
+                <Button Grid.Column="2" Command="{Binding PlayPauseCommand}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Width="72" Height="72" >
+                    <Panel>
+                        <Image Source="avares://Netmancer/Assets/pause.png"
+                               IsVisible="{Binding IsPlaying}" />
+                        <Image Source="avares://Netmancer/Assets/play.png"
+                               IsVisible="{Binding !IsPlaying}" />
+                    </Panel>
+                </Button>
 
                 <!-- Next -->
                 <Button Grid.Column="3"
