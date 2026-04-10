@@ -10,9 +10,10 @@ namespace Netmancer.Models;
 public partial class PlaybackPositionModel : ObservableObject
 {
     private bool _isDragging;
+    private bool _isUpdatingFromService;
 
     /// <summary>
-    /// Invoked when the user finishes dragging the position slider,
+    /// Invoked when the user changes the position (click or drag release),
     /// passing the desired position in seconds.
     /// </summary>
     public Action<double>? SeekRequested { get; init; }
@@ -29,14 +30,27 @@ public partial class PlaybackPositionModel : ObservableObject
     public string DurationDisplay => FormatTime(DurationSeconds);
 
     /// <summary>
+    /// Called when <see cref="PositionSeconds"/> changes.
+    /// If the change was initiated by the user (click or drag on slider)
+    /// rather than the polling timer, trigger a seek.
+    /// </summary>
+    partial void OnPositionSecondsChanged(double value)
+    {
+        if (!_isUpdatingFromService && !_isDragging)
+            SeekRequested?.Invoke(value);
+    }
+
+    /// <summary>
     /// Updates the current position and duration from the media player.
     /// Ignored while the user is dragging the slider.
     /// </summary>
     public void Update(double position, double duration)
     {
         if (_isDragging) return;
+        _isUpdatingFromService = true;
         PositionSeconds = position;
         DurationSeconds = duration;
+        _isUpdatingFromService = false;
     }
 
     /// <summary>
@@ -44,8 +58,10 @@ public partial class PlaybackPositionModel : ObservableObject
     /// </summary>
     public void Reset()
     {
+        _isUpdatingFromService = true;
         PositionSeconds = 0;
         DurationSeconds = 0;
+        _isUpdatingFromService = false;
     }
 
     [RelayCommand]
