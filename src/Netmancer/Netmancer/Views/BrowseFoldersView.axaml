@@ -12,8 +12,6 @@
 
     <UserControl.Resources>
         <conv:InvertBoolConverter x:Key="InvertBoolConverter" />
-        <conv:IsNullConverter x:Key="IsNullConverter" />
-        <conv:IsNotNullConverter x:Key="IsNotNullConverter" />
     </UserControl.Resources>
 
     <DockPanel>
@@ -106,7 +104,7 @@
                                            Height="44" Width="44"
                                            Stretch="UniformToFill"
                                            IsVisible="{Binding IsContainer}" />
-                                    <!-- ~1~ Album art thumbnail @1@ -->
+                                    <!-- Album art thumbnail -->
                                     <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
                                            Stretch="UniformToFill"
                                            Height="44" Width="44"
