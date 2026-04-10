@@ -7,25 +7,13 @@ using Netmancer.Services;
 
 namespace Netmancer.ViewModels;
 
-public partial class BrowseFoldersViewModel : ViewModelBase
+public partial class BrowseFoldersViewModel(
+    IUpnpContentDirectoryService contentDirectoryService,
+    IAudioPlayerService audioPlayerService,
+    INavigationService navigationService,
+    IServiceProvider serviceProvider)
+    : ViewModelBase
 {
-    private readonly IUpnpContentDirectoryService _contentDirectoryService;
-    private readonly IAudioPlayerService _audioPlayerService;
-    private readonly INavigationService _navigationService;
-    private readonly IServiceProvider _serviceProvider;
-
-    public BrowseFoldersViewModel(
-        IUpnpContentDirectoryService contentDirectoryService,
-        IAudioPlayerService audioPlayerService,
-        INavigationService navigationService,
-        IServiceProvider serviceProvider)
-    {
-        _contentDirectoryService = contentDirectoryService;
-        _audioPlayerService = audioPlayerService;
-        _navigationService = navigationService;
-        _serviceProvider = serviceProvider;
-    }
-
     [ObservableProperty]
     public partial string DeviceName { get; set; } = string.Empty;
 
@@ -67,7 +55,7 @@ public partial class BrowseFoldersViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public async Task LoadFolders()
+    private async Task LoadFolders()
     {
         Items.Clear();
         ErrorMessage = null;
@@ -79,7 +67,7 @@ public partial class BrowseFoldersViewModel : ViewModelBase
         try
         {
             var uri = new Uri(DescriptionUrl);
-            var results = await _contentDirectoryService.BrowseAsync(uri, ObjectId);
+            var results = await contentDirectoryService.BrowseAsync(uri, ObjectId);
 
             foreach (var item in results)
                 Items.Add(item);
@@ -106,9 +94,9 @@ public partial class BrowseFoldersViewModel : ViewModelBase
     {
         if (item.IsContainer)
         {
-            var vm = (BrowseFoldersViewModel)_serviceProvider.GetService(typeof(BrowseFoldersViewModel))!;
+            var vm = (BrowseFoldersViewModel)serviceProvider.GetService(typeof(BrowseFoldersViewModel))!;
             vm.Initialize(DeviceName, DescriptionUrl, item.Id);
-            _navigationService.NavigateTo(vm);
+            navigationService.NavigateTo(vm);
         }
         else if (!string.IsNullOrEmpty(item.ResourceUrl))
         {
@@ -119,10 +107,10 @@ public partial class BrowseFoldersViewModel : ViewModelBase
                                 i.MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase) &&
                                 !string.IsNullOrEmpty(i.ResourceUrl))
                     .ToList();
-                _audioPlayerService.Play(item, audioItems);
+                audioPlayerService.Play(item, audioItems);
 
-                var nowPlaying = (NowPlayingViewModel)_serviceProvider.GetService(typeof(NowPlayingViewModel))!;
-                _navigationService.NavigateTo(nowPlaying);
+                var nowPlaying = (NowPlayingViewModel)serviceProvider.GetService(typeof(NowPlayingViewModel))!;
+                navigationService.NavigateTo(nowPlaying);
             }
             else
             {
@@ -139,6 +127,6 @@ public partial class BrowseFoldersViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void GoBack() => _navigationService.GoBack();
+    private void GoBack() => navigationService.GoBack();
 }
 

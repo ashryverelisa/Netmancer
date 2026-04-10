@@ -57,7 +57,3 @@ public static class ImageLoader
         }
     }
 }
-
-
-
-

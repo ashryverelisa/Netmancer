@@ -10,19 +10,10 @@ using Rssdp;
 
 namespace Netmancer.ViewModels;
 
-public partial class MediaServersViewModel : ViewModelBase
+public partial class MediaServersViewModel(
+    INavigationService navigationService,
+    IServiceProvider serviceProvider) : ViewModelBase
 {
-    private readonly INavigationService _navigationService;
-    private readonly IServiceProvider _serviceProvider;
-
-    public MediaServersViewModel(
-        INavigationService navigationService,
-        IServiceProvider serviceProvider)
-    {
-        _navigationService = navigationService;
-        _serviceProvider = serviceProvider;
-    }
-
     public ObservableCollection<MediaDevice> Devices { get; } = [];
 
     [ObservableProperty]
@@ -100,9 +91,9 @@ public partial class MediaServersViewModel : ViewModelBase
 
     private void DeviceTapped(MediaDevice device)
     {
-        var vm = (BrowseFoldersViewModel)_serviceProvider.GetService(typeof(BrowseFoldersViewModel))!;
+        var vm = (BrowseFoldersViewModel)serviceProvider.GetService(typeof(BrowseFoldersViewModel))!;
         vm.Initialize(device.FriendlyName, device.DescriptionLocation.ToString(), "0");
-        _navigationService.NavigateTo(vm);
+        navigationService.NavigateTo(vm);
     }
 
     private static List<string> GetLocalIpv4Addresses()

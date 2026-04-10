@@ -17,4 +17,3 @@ public class InvertBoolConverter : IValueConverter
         return value is bool b ? !b : value;
     }
 }
-

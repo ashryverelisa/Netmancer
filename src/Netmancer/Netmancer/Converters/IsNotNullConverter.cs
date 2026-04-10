@@ -9,8 +9,6 @@ namespace Netmancer.Converters;
 /// </summary>
 public class IsNotNullConverter : IValueConverter
 {
-    public static readonly IsNotNullConverter Instance = new();
-
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return value is not null and not "";

@@ -11,7 +11,7 @@ namespace Netmancer.Services;
 /// </summary>
 public partial class AudioPlayerService : ObservableObject, IAudioPlayerService, IDisposable
 {
-    private readonly LibVLC _libVLC;
+    private readonly LibVLC _libVlc;
     private readonly MediaPlayer _mediaPlayer;
     private List<ContentItem> _playlist = [];
     private int _currentIndex = -1;
@@ -19,8 +19,8 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService,
     public AudioPlayerService()
     {
         Core.Initialize();
-        _libVLC = new LibVLC("--no-video");
-        _mediaPlayer = new MediaPlayer(_libVLC);
+        _libVlc = new LibVLC("--no-video");
+        _mediaPlayer = new MediaPlayer(_libVlc);
 
         _mediaPlayer.Playing += (_, _) =>
             Dispatcher.UIThread.Post(() => IsPlaying = true);
@@ -86,7 +86,7 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService,
 
         if (item.ResourceUrl is not null)
         {
-            using var media = new Media(_libVLC, new Uri(item.ResourceUrl));
+            using var media = new Media(_libVlc, new Uri(item.ResourceUrl));
             _mediaPlayer.Play(media);
         }
     }
@@ -130,7 +130,7 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService,
     public void Dispose()
     {
         _mediaPlayer.Dispose();
-        _libVLC.Dispose();
+        _libVlc.Dispose();
         GC.SuppressFinalize(this);
     }
 }

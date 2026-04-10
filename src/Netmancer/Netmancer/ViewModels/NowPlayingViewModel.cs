@@ -108,10 +108,15 @@ public partial class NowPlayingViewModel : ViewModelBase
         foreach (var property in vmProperties)
             OnPropertyChanged(property);
 
-        if (e.PropertyName == nameof(IAudioPlayerService.CanGoNext))
-            NextCommand.NotifyCanExecuteChanged();
-        else if (e.PropertyName == nameof(IAudioPlayerService.CanGoPrevious))
-            PreviousCommand.NotifyCanExecuteChanged();
+        switch (e.PropertyName)
+        {
+            case nameof(IAudioPlayerService.CanGoNext):
+                NextCommand.NotifyCanExecuteChanged();
+                break;
+            case nameof(IAudioPlayerService.CanGoPrevious):
+                PreviousCommand.NotifyCanExecuteChanged();
+                break;
+        }
     }
 }
 
