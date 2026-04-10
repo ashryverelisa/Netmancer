@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Netmancer.ViewModels"
-             xmlns:models="using:Netmancer.Models"
              xmlns:conv="using:Netmancer.Converters"
              xmlns:helpers="using:Netmancer.Helpers"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="700"
@@ -124,7 +123,6 @@
 
                 <!-- Previous -->
                 <Button Grid.Column="1"
-                        Content="⏮"
                         Command="{Binding PreviousCommand}"
                         FontSize="30"
                         Foreground="{DynamicResource TextPrimaryBrush}"
@@ -135,7 +133,11 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center" />
+                        VerticalContentAlignment="Center" >
+                    <StackPanel>
+                        <Image Source="avares://Netmancer/Assets/back-arrow.png"/>
+                    </StackPanel>
+                </Button>
 
                 <!-- Play / Pause -->
                 <Border Grid.Column="2"
@@ -156,12 +158,12 @@
                             HorizontalAlignment="Center"
                             HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
-                            Width="72" Height="72" />
+                            Width="72" Height="72" >
+                    </Button>
                 </Border>
 
                 <!-- Next -->
                 <Button Grid.Column="3"
-                        Content="⏭"
                         Command="{Binding NextCommand}"
                         FontSize="30"
                         Foreground="{DynamicResource TextPrimaryBrush}"
@@ -172,7 +174,11 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center" />
+                        VerticalContentAlignment="Center" >
+                    <StackPanel>
+                        <Image Source="avares://Netmancer/Assets/right-arrow.png"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Grid>
     </ScrollViewer>

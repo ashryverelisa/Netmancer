@@ -114,4 +114,3 @@ public partial class NowPlayingViewModel : ViewModelBase
         }
     }
 }
-

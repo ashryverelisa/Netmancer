@@ -3,10 +3,6 @@ using Netmancer.Services;
 
 namespace Netmancer.ViewModels;
 
-/// <summary>
-/// Root ViewModel that hosts page navigation and the mini player.
-/// Replaces MAUI Shell navigation with a ViewModel-based stack.
-/// </summary>
 public partial class MainViewModel : ViewModelBase, INavigationService
 {
     private readonly Stack<ViewModelBase> _navigationStack = new();
