@@ -1,4 +1,5 @@
-﻿namespace Netmancer.Models;
+﻿
+namespace Netmancer.Models;
 
 public class ContentItem
 {
@@ -28,19 +29,9 @@ public class ContentItem
     public bool HasAlbumArt => !string.IsNullOrEmpty(AlbumArtUri);
 
     /// <summary>
-    /// UPnP class, e.g. "object.item.audioItem.musicTrack", "object.item.videoItem", etc.
+    /// UPnP class, e.g. "object.item.audioItem.musicTrack", "object.item.imageItem", etc.
     /// </summary>
     public string MediaClass { get; init; } = string.Empty;
-
-    /// <summary>
-    /// A user-friendly icon string derived from the media class.
-    /// </summary>
-    public string Icon =>
-        IsContainer ? "📁" :
-        MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase) ? "🎵" :
-        MediaClass.Contains("video", StringComparison.OrdinalIgnoreCase) ? "🎬" :
-        MediaClass.Contains("image", StringComparison.OrdinalIgnoreCase) ? "🖼️" :
-        "📄";
 
     /// <summary>
     /// Short description shown below the title for files.
@@ -49,8 +40,6 @@ public class ContentItem
         IsContainer ? "" :
         MediaClass.Contains("audio", StringComparison.OrdinalIgnoreCase)
             ? (!string.IsNullOrEmpty(Artist) ? Artist : "Audio") :
-        MediaClass.Contains("video", StringComparison.OrdinalIgnoreCase) ? "Video" :
-        MediaClass.Contains("image", StringComparison.OrdinalIgnoreCase) ? "Image" :
-        "File";
+        "";
 }
 

@@ -101,13 +101,12 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center">
                                 <Panel>
-                                    <!-- Emoji icon (folders + items without art) -->
-                                    <TextBlock Text="{Binding Icon}"
-                                               FontSize="20"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
-                                    <!-- Album art thumbnail -->
+                                    <!-- Folder icon (containers only) -->
+                                    <Image Source="avares://Netmancer/Assets/folder.png"
+                                           Height="44" Width="44"
+                                           Stretch="UniformToFill"
+                                           IsVisible="{Binding IsContainer}" />
+                                    <!-- ~1~ Album art thumbnail @1@ -->
                                     <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
                                            Stretch="UniformToFill"
                                            Height="44" Width="44"

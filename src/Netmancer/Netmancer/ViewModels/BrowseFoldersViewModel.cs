@@ -37,9 +37,6 @@ public partial class BrowseFoldersViewModel(
     [ObservableProperty]
     public partial ContentItem? SelectedItem { get; set; }
 
-    /// <summary>
-    /// Replaces MAUI QueryProperty — call after DI construction.
-    /// </summary>
     public void Initialize(string deviceName, string descriptionUrl, string objectId)
     {
         DeviceName = deviceName;
