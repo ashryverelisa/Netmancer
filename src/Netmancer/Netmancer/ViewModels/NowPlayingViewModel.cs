@@ -48,11 +48,6 @@ public partial class NowPlayingViewModel : ViewModelBase
 
     public PlaybackPositionModel Position { get; }
 
-    [ObservableProperty]
-    public partial double Volume { get; set; } = 1.0;
-
-    partial void OnVolumeChanged(double value) => _audioService.Volume = value;
-
     /// <summary>
     /// Starts a timer to poll position/duration from the audio service.
     /// Called when the view is attached.

@@ -174,27 +174,6 @@
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center" />
             </Grid>
-
-            <!-- ═══ Volume Control ═══ -->
-            <Grid Grid.Row="6"
-                  Margin="8,28,8,0"
-                  ColumnDefinitions="Auto,*,Auto">
-                <TextBlock Text="🔈"
-                           FontSize="14"
-                           Foreground="{DynamicResource TextMutedBrush}"
-                           VerticalAlignment="Center" />
-                <Slider Grid.Column="1"
-                        Minimum="0"
-                        Maximum="1"
-                        Value="{Binding Volume}"
-                        Margin="10,0"
-                        Foreground="{DynamicResource TextSecondaryBrush}" />
-                <TextBlock Grid.Column="2"
-                           Text="🔊"
-                           FontSize="14"
-                           Foreground="{DynamicResource TextMutedBrush}"
-                           VerticalAlignment="Center" />
-            </Grid>
         </Grid>
     </ScrollViewer>
 </UserControl>
