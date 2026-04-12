@@ -1,0 +1,145 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Netmancer.ViewModels"
+             xmlns:models="using:Netmancer.Models"
+             xmlns:conv="using:Netmancer.Converters"
+             xmlns:helpers="using:Netmancer.Helpers"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="700"
+             x:Class="Netmancer.Views.BrowseFoldersView"
+             x:DataType="vm:BrowseFoldersViewModel">
+
+    <UserControl.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBoolConverter" />
+    </UserControl.Resources>
+
+    <DockPanel>
+        <!-- Header with back button + device name -->
+        <DockPanel DockPanel.Dock="Top" Margin="8,8,12,4">
+            <Button DockPanel.Dock="Left"
+                    Content="←"
+                    FontSize="20"
+                    Foreground="{DynamicResource TextSecondaryBrush}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{Binding GoBackCommand}"
+                    Width="44" Height="40"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
+            <TextBlock Text="{Binding DeviceName}"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimaryBrush}"
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"
+                       TextTrimming="CharacterEllipsis" />
+        </DockPanel>
+
+        <!-- Content area -->
+        <Panel>
+            <!-- Loading indicator -->
+            <ProgressBar IsIndeterminate="True"
+                         IsVisible="{Binding IsLoading}"
+                         Foreground="{DynamicResource AccentBrush}"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center"
+                         Width="120" />
+
+            <!-- Error message -->
+            <StackPanel IsVisible="{Binding HasError}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="12"
+                        Margin="24">
+                <TextBlock Text="⚠️"
+                           FontSize="48"
+                           TextAlignment="Center" />
+                <TextBlock Text="{Binding ErrorMessage}"
+                           FontSize="14"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+                <Button Content="Retry"
+                        Command="{Binding LoadFoldersCommand}"
+                        Background="{DynamicResource AccentBrush}"
+                        Foreground="White"
+                        CornerRadius="8"
+                        HorizontalAlignment="Center"
+                        Padding="24,8" />
+            </StackPanel>
+
+            <!-- Content List -->
+            <ListBox ItemsSource="{Binding Items}"
+                     SelectedItem="{Binding SelectedItem}"
+                     Background="Transparent"
+                     IsVisible="{Binding !IsLoading}">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                        <Setter Property="Background" Value="#10FFFFFF" />
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="models:ContentItem">
+                        <Grid Margin="16,6" ColumnDefinitions="48,*,Auto" ColumnSpacing="14">
+                            <!-- Icon / Album Art Area -->
+                            <Border Grid.Column="0"
+                                    Background="{DynamicResource DarkCardBackgroundBrush}"
+                                    Height="44" Width="44"
+                                    CornerRadius="8"
+                                    ClipToBounds="True"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                <Panel>
+                                    <!-- Folder icon (containers only) -->
+                                    <Image Source="avares://Netmancer/Assets/folder.png"
+                                           Height="44" Width="44"
+                                           Stretch="UniformToFill"
+                                           IsVisible="{Binding IsContainer}" />
+                                    <!-- Album art thumbnail -->
+                                    <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
+                                           Stretch="UniformToFill"
+                                           Height="44" Width="44"
+                                           IsVisible="{Binding HasAlbumArt}" />
+                                </Panel>
+                            </Border>
+
+                            <!-- Title & Subtitle -->
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Spacing="2">
+                                <TextBlock Text="{Binding Title}"
+                                           FontSize="15"
+                                           Foreground="{DynamicResource TextPrimaryBrush}"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxLines="1" />
+                                <TextBlock Text="{Binding Subtitle}"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
+                                           IsVisible="{Binding IsContainer, Converter={StaticResource InvertBoolConverter}}" />
+                            </StackPanel>
+
+                            <!-- Chevron for containers -->
+                            <TextBlock Grid.Column="2"
+                                       Text="›"
+                                       FontSize="22"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding IsContainer}"
+                                       Margin="0,0,4,0" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Panel>
+    </DockPanel>
+</UserControl>
+

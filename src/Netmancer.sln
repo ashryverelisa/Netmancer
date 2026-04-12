@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netmancer", "Netmancer\Netmancer.csproj", "{74A54DB6-6654-4017-8FA4-84148EA27612}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netmancer", "Netmancer\Netmancer\Netmancer.csproj", "{F88043D9-6BF6-4C63-9D3F-244A1F68AFA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netmancer.Android", "Netmancer\Netmancer.Android\Netmancer.Android.csproj", "{CE98A79E-B83C-4718-BC5A-FD5B244BEB65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netmancer.Desktop", "Netmancer\Netmancer.Desktop\Netmancer.Desktop.csproj", "{3238ED97-EF17-4F44-B5E6-28309C20D438}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +12,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{74A54DB6-6654-4017-8FA4-84148EA27612}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74A54DB6-6654-4017-8FA4-84148EA27612}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74A54DB6-6654-4017-8FA4-84148EA27612}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74A54DB6-6654-4017-8FA4-84148EA27612}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F88043D9-6BF6-4C63-9D3F-244A1F68AFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F88043D9-6BF6-4C63-9D3F-244A1F68AFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F88043D9-6BF6-4C63-9D3F-244A1F68AFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F88043D9-6BF6-4C63-9D3F-244A1F68AFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE98A79E-B83C-4718-BC5A-FD5B244BEB65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE98A79E-B83C-4718-BC5A-FD5B244BEB65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE98A79E-B83C-4718-BC5A-FD5B244BEB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE98A79E-B83C-4718-BC5A-FD5B244BEB65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3238ED97-EF17-4F44-B5E6-28309C20D438}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3238ED97-EF17-4F44-B5E6-28309C20D438}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3238ED97-EF17-4F44-B5E6-28309C20D438}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3238ED97-EF17-4F44-B5E6-28309C20D438}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

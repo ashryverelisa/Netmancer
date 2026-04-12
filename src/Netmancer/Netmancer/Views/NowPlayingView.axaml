@@ -1,0 +1,182 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Netmancer.ViewModels"
+             xmlns:conv="using:Netmancer.Converters"
+             xmlns:helpers="using:Netmancer.Helpers"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="700"
+             x:Class="Netmancer.Views.NowPlayingView"
+             x:DataType="vm:NowPlayingViewModel">
+
+    <UserControl.Resources>
+        <conv:IsNullConverter x:Key="IsNullConverter" />
+    </UserControl.Resources>
+
+    <ScrollViewer>
+        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto"
+              Margin="20,0,20,32">
+
+            <!-- ═══ Drag Handle + Header ═══ -->
+            <StackPanel Grid.Row="0" Margin="0,12,0,8" Spacing="12">
+                <!-- Modal drag indicator pill -->
+                <Border Height="4" Width="36"
+                        CornerRadius="2"
+                        Background="{DynamicResource TextMutedBrush}"
+                        HorizontalAlignment="Center" />
+
+                <!-- Header row: back chevron + title -->
+                <Grid ColumnDefinitions="48,*,48">
+                    <Button Content="⌄"
+                            Command="{Binding GoBackCommand}"
+                            FontSize="28"
+                            FontWeight="Bold"
+                            Foreground="{DynamicResource TextSecondaryBrush}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="0"
+                            Width="48" Height="40"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
+                    <TextBlock Grid.Column="1"
+                               Text="NOW PLAYING"
+                               FontSize="11"
+                               LetterSpacing="1.5"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
+
+            <!-- ═══ Album Art ═══ -->
+            <Border Grid.Row="1"
+                    CornerRadius="16"
+                    ClipToBounds="True"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    MaxHeight="300"
+                    MaxWidth="300"
+                    Margin="0,8,0,0"
+                    Background="{DynamicResource DarkCardBackgroundBrush}"
+                    BoxShadow="0 8 24 0 #80000000">
+                <Panel Height="300" Width="300">
+                    <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
+                           Stretch="UniformToFill"
+                           Height="260" Width="260" />
+                    <!-- Fallback: music note when no album art -->
+                    <TextBlock Text="🎵"
+                               FontSize="80"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
+                </Panel>
+            </Border>
+
+            <!-- Spacer row -->
+            <Panel Grid.Row="2" />
+
+            <!-- ═══ Track Info ═══ -->
+            <StackPanel Grid.Row="3" Spacing="4" Margin="4,16,4,0">
+                <TextBlock Text="{Binding TrackTitle}"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
+                           TextAlignment="Left"
+                           TextTrimming="CharacterEllipsis"
+                           MaxLines="1" />
+                <TextBlock Text="{Binding ArtistName}"
+                           FontSize="15"
+                           Foreground="{DynamicResource AccentBrush}"
+                           TextAlignment="Left"
+                           TextTrimming="CharacterEllipsis"
+                           MaxLines="1" />
+            </StackPanel>
+
+            <!-- ═══ Position Slider + Timestamps ═══ -->
+            <StackPanel Grid.Row="4" Margin="0,20,0,0" Spacing="0">
+                <Slider Minimum="0"
+                        Maximum="{Binding Position.DurationSeconds}"
+                        Value="{Binding Position.PositionSeconds}"
+                        Foreground="{DynamicResource AccentBrush}" />
+                <Grid ColumnDefinitions="*,*" Margin="2,0">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Position.PositionDisplay}"
+                               FontSize="11"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               TextAlignment="Left" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Position.DurationDisplay}"
+                               FontSize="11"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               TextAlignment="Right" />
+                </Grid>
+            </StackPanel>
+
+            <!-- ═══ Playback Controls ═══ -->
+            <Grid Grid.Row="5"
+                  ColumnDefinitions="*,Auto,*,Auto,*"
+                  Margin="16,24,16,0"
+                  Height="88">
+
+                <!-- Previous -->
+                <Button Grid.Column="1"
+                        Command="{Binding PreviousCommand}"
+                        FontSize="30"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Width="60" Height="60"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center" >
+                    <StackPanel>
+                        <Image Source="avares://Netmancer/Assets/back-arrow.png"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Play / Pause -->
+                <Button Grid.Column="2" Command="{Binding PlayPauseCommand}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Width="72" Height="72" >
+                    <Panel>
+                        <Image Source="avares://Netmancer/Assets/pause.png"
+                               IsVisible="{Binding IsPlaying}" />
+                        <Image Source="avares://Netmancer/Assets/play.png"
+                               IsVisible="{Binding !IsPlaying}" />
+                    </Panel>
+                </Button>
+
+                <!-- Next -->
+                <Button Grid.Column="3"
+                        Command="{Binding NextCommand}"
+                        FontSize="30"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Width="60" Height="60"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center" >
+                    <StackPanel>
+                        <Image Source="avares://Netmancer/Assets/right-arrow.png"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
+
+

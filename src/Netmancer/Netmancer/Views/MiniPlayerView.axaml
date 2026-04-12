@@ -1,0 +1,86 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Netmancer.ViewModels"
+             xmlns:conv="using:Netmancer.Converters"
+             xmlns:helpers="using:Netmancer.Helpers"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="80"
+             x:Class="Netmancer.Views.MiniPlayerView"
+             x:DataType="vm:MiniPlayerViewModel"
+             IsVisible="{Binding IsVisible}">
+
+    <UserControl.Resources>
+        <conv:IsNullConverter x:Key="IsNullConverter" />
+    </UserControl.Resources>
+
+    <Border Background="{DynamicResource DarkSurfaceBrush}"
+            CornerRadius="12"
+            Margin="8,4,8,8"
+            BoxShadow="0 2 8 0 #66000000">
+
+        <Grid ColumnDefinitions="56,*,48"
+              Height="64"
+              Margin="8,8,4,8">
+
+            <!-- Album Art Thumbnail -->
+            <Border Grid.Column="0"
+                    Background="{DynamicResource DarkCardBackgroundBrush}"
+                    Height="48" Width="48"
+                    CornerRadius="8"
+                    ClipToBounds="True">
+                <Panel>
+                    <TextBlock Text="🎵"
+                               FontSize="22"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding AlbumArtUri, Converter={StaticResource IsNullConverter}}" />
+                    <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
+                           Stretch="UniformToFill"
+                           Height="48" Width="48"
+                           IsVisible="{Binding HasAlbumArt}" />
+                </Panel>
+            </Border>
+
+            <!-- Track Info -->
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Margin="12,0,0,0"
+                        Spacing="2">
+                <TextBlock Text="{Binding TrackTitle}"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
+                           TextTrimming="CharacterEllipsis"
+                           MaxLines="1" />
+                <TextBlock Text="{Binding ArtistName}"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextTrimming="CharacterEllipsis"
+                           MaxLines="1" />
+            </StackPanel>
+
+            <!-- Play/Pause Button -->
+            <Button Grid.Column="2"
+                    Command="{Binding PlayPauseCommand}"
+                    FontSize="20"
+                    Foreground="{DynamicResource AccentBrush}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="0"
+                    Width="44" Height="44"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" >
+                <Panel>
+                    <Image Source="avares://Netmancer/Assets/pause.png"
+                           IsVisible="{Binding IsPlaying}" />
+                    <Image Source="avares://Netmancer/Assets/play.png"
+                           IsVisible="{Binding !IsPlaying}" />
+                </Panel>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>
+
