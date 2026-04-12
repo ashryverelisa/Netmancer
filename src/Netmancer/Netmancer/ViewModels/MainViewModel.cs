@@ -1,4 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
+using Netmancer.Messages;
 using Netmancer.Services;
 
 namespace Netmancer.ViewModels;
@@ -6,6 +9,25 @@ namespace Netmancer.ViewModels;
 public partial class MainViewModel : ViewModelBase, INavigationService
 {
     private readonly Stack<ViewModelBase> _navigationStack = new();
+    private readonly IServiceProvider _serviceProvider;
+
+    public MainViewModel(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+
+        WeakReferenceMessenger.Default.Register<NavigateToNowPlayingMessage>(this, (r, _) =>
+        {
+            var vm = _serviceProvider.GetRequiredService<NowPlayingViewModel>();
+            ((MainViewModel)r).NavigateTo(vm);
+        });
+
+        WeakReferenceMessenger.Default.Register<NavigateToBrowseFolderMessage>(this, (r, m) =>
+        {
+            var vm = _serviceProvider.GetRequiredService<BrowseFoldersViewModel>();
+            vm.Initialize(m.DeviceName, m.DescriptionUrl, m.ObjectId);
+            ((MainViewModel)r).NavigateTo(vm);
+        });
+    }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanGoBack))]

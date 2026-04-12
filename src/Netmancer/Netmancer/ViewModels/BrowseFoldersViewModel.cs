@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Netmancer.Messages;
 using Netmancer.Models;
 using Netmancer.Services;
 
@@ -10,8 +12,7 @@ namespace Netmancer.ViewModels;
 public partial class BrowseFoldersViewModel(
     IUpnpContentDirectoryService contentDirectoryService,
     IAudioPlayerService audioPlayerService,
-    INavigationService navigationService,
-    IServiceProvider serviceProvider)
+    INavigationService navigationService)
     : ViewModelBase
 {
     [ObservableProperty]
@@ -91,9 +92,8 @@ public partial class BrowseFoldersViewModel(
     {
         if (item.IsContainer)
         {
-            var vm = (BrowseFoldersViewModel)serviceProvider.GetService(typeof(BrowseFoldersViewModel))!;
-            vm.Initialize(DeviceName, DescriptionUrl, item.Id);
-            navigationService.NavigateTo(vm);
+            WeakReferenceMessenger.Default.Send(
+                new NavigateToBrowseFolderMessage(DeviceName, DescriptionUrl, item.Id));
         }
         else if (!string.IsNullOrEmpty(item.ResourceUrl))
         {
@@ -106,8 +106,7 @@ public partial class BrowseFoldersViewModel(
                     .ToList();
                 audioPlayerService.Play(item, audioItems);
 
-                var nowPlaying = (NowPlayingViewModel)serviceProvider.GetService(typeof(NowPlayingViewModel))!;
-                navigationService.NavigateTo(nowPlaying);
+                WeakReferenceMessenger.Default.Send(new NavigateToNowPlayingMessage());
             }
             else
             {

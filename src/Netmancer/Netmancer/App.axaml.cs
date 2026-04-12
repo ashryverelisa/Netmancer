@@ -23,7 +23,6 @@ public partial class App : Application
         ConfigureServices(services);
         Services = services.BuildServiceProvider();
 
-        // Build the root ViewModel
         var mainVm = Services.GetRequiredService<MainViewModel>();
 
         // Set the initial page

@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Netmancer.Messages;
 using Netmancer.Services;
 
 namespace Netmancer.ViewModels;
@@ -14,17 +16,11 @@ public partial class MiniPlayerViewModel : ViewModelBase
     };
 
     private readonly IAudioPlayerService _audioService;
-    private readonly INavigationService _navigationService;
-    private readonly IServiceProvider _serviceProvider;
 
     public MiniPlayerViewModel(
-        IAudioPlayerService audioPlayerService,
-        INavigationService navigationService,
-        IServiceProvider serviceProvider)
+        IAudioPlayerService audioPlayerService)
     {
         _audioService = audioPlayerService;
-        _navigationService = navigationService;
-        _serviceProvider = serviceProvider;
         _audioService.PropertyChanged += OnAudioServicePropertyChanged;
     }
 
@@ -41,8 +37,7 @@ public partial class MiniPlayerViewModel : ViewModelBase
     [RelayCommand]
     private void OpenNowPlaying()
     {
-        var nowPlaying = (NowPlayingViewModel)_serviceProvider.GetService(typeof(NowPlayingViewModel))!;
-        _navigationService.NavigateTo(nowPlaying);
+        WeakReferenceMessenger.Default.Send(new NavigateToNowPlayingMessage());
     }
 
     private void OnAudioServicePropertyChanged(object? sender,

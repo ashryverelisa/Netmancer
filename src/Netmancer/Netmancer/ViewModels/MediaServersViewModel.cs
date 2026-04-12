@@ -4,15 +4,14 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Netmancer.Messages;
 using Netmancer.Models;
-using Netmancer.Services;
 using Rssdp;
 
 namespace Netmancer.ViewModels;
 
-public partial class MediaServersViewModel(
-    INavigationService navigationService,
-    IServiceProvider serviceProvider) : ViewModelBase
+public partial class MediaServersViewModel : ViewModelBase
 {
     public ObservableCollection<MediaDevice> Devices { get; } = [];
 
@@ -91,9 +90,11 @@ public partial class MediaServersViewModel(
 
     private void DeviceTapped(MediaDevice device)
     {
-        var vm = (BrowseFoldersViewModel)serviceProvider.GetService(typeof(BrowseFoldersViewModel))!;
-        vm.Initialize(device.FriendlyName, device.DescriptionLocation.ToString(), "0");
-        navigationService.NavigateTo(vm);
+        WeakReferenceMessenger.Default.Send(
+            new NavigateToBrowseFolderMessage(
+                device.FriendlyName,
+                device.DescriptionLocation.ToString(),
+                "0"));
     }
 
     private static List<string> GetLocalIpv4Addresses()
