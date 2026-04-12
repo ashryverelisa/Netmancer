@@ -49,16 +49,6 @@
                         VerticalAlignment="Center"
                         Spacing="16"
                         IsVisible="{Binding !Devices.Count}">
-                <!-- Stylized icon -->
-                <Border Background="#1A00BFA5"
-                        Height="80" Width="80"
-                        CornerRadius="20"
-                        HorizontalAlignment="Center">
-                    <TextBlock Text="📡"
-                               FontSize="36"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                </Border>
 
                 <StackPanel Spacing="6" HorizontalAlignment="Center">
                     <TextBlock Text="Looking for servers"
