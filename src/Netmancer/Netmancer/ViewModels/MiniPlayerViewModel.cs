@@ -10,7 +10,7 @@ public partial class MiniPlayerViewModel : ViewModelBase
         [nameof(IAudioPlayerService.CurrentTrack)] =
             [nameof(TrackTitle), nameof(ArtistName), nameof(AlbumArtUri), nameof(IsVisible), nameof(HasAlbumArt)],
         [nameof(IAudioPlayerService.IsPlaying)] =
-            [nameof(IsPlaying), nameof(PlayPauseIcon)],
+            [nameof(IsPlaying)],
     };
 
     private readonly IAudioPlayerService _audioService;
@@ -34,7 +34,6 @@ public partial class MiniPlayerViewModel : ViewModelBase
     public bool HasAlbumArt => !string.IsNullOrEmpty(AlbumArtUri);
     public bool IsPlaying => _audioService.IsPlaying;
     public bool IsVisible => _audioService.HasTrack;
-    public string PlayPauseIcon => IsPlaying ? "⏸" : "▶";
 
     [RelayCommand]
     private void PlayPause() => _audioService.PlayPause();

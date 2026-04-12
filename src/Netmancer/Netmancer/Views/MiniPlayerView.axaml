@@ -62,7 +62,6 @@
 
             <!-- Play/Pause Button -->
             <Button Grid.Column="2"
-                    Content="{Binding PlayPauseIcon}"
                     Command="{Binding PlayPauseCommand}"
                     FontSize="20"
                     Foreground="{DynamicResource AccentBrush}"
@@ -73,7 +72,14 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center" />
+                    VerticalContentAlignment="Center" >
+                <Panel>
+                    <Image Source="avares://Netmancer/Assets/pause.png"
+                           IsVisible="{Binding IsPlaying}" />
+                    <Image Source="avares://Netmancer/Assets/play.png"
+                           IsVisible="{Binding !IsPlaying}" />
+                </Panel>
+            </Button>
         </Grid>
     </Border>
 </UserControl>
