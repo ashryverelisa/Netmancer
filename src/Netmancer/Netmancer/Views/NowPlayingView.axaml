@@ -54,17 +54,19 @@
             <Border Grid.Row="1"
                     CornerRadius="16"
                     ClipToBounds="True"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
-                    MaxHeight="300"
-                    MaxWidth="300"
+                    MaxWidth="480"
                     Margin="0,8,0,0"
                     Background="{DynamicResource DarkCardBackgroundBrush}"
                     BoxShadow="0 8 24 0 #80000000">
-                <Panel Height="300" Width="300">
+                <Panel>
+                    <!-- Keep the panel square by binding Height to its own Width -->
+                    <Panel.Height>
+                        <ReflectionBinding Path="Bounds.Width" RelativeSource="{RelativeSource Self}" />
+                    </Panel.Height>
                     <Image helpers:ImageLoader.Source="{Binding AlbumArtUri}"
-                           Stretch="UniformToFill"
-                           Height="260" Width="260" />
+                           Stretch="UniformToFill" />
                     <!-- Fallback: music note when no album art -->
                     <TextBlock Text="🎵"
                                FontSize="80"
