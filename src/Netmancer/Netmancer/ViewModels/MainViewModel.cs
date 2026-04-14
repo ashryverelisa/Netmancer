@@ -31,12 +31,15 @@ public partial class MainViewModel : ViewModelBase, INavigationService
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanGoBack))]
+    [NotifyPropertyChangedFor(nameof(ShowMiniPlayer))]
     public partial ViewModelBase? CurrentPage { get; set; }
 
     [ObservableProperty]
     public partial MiniPlayerViewModel? MiniPlayer { get; set; }
 
     public bool CanGoBack => _navigationStack.Count > 0;
+
+    public bool ShowMiniPlayer => CurrentPage is not NowPlayingViewModel;
 
     public void NavigateTo(ViewModelBase viewModel)
     {

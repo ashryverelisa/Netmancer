@@ -8,13 +8,11 @@
              x:Class="Netmancer.Views.MainView"
              x:DataType="vm:MainViewModel"
              Background="{DynamicResource DarkBackgroundBrush}">
-
     <DockPanel>
-        <!-- Mini Player — always visible at the bottom when a track is loaded -->
-        <views:MiniPlayerView DockPanel.Dock="Bottom"
-                              DataContext="{Binding MiniPlayer}" />
-
-        <!-- Current page content — resolved by ViewLocator from the ViewModel type -->
-        <ContentControl Content="{Binding CurrentPage}" />
+        <Panel DockPanel.Dock="Bottom"
+               IsVisible="{Binding ShowMiniPlayer}">
+            <views:MiniPlayerView DataContext="{Binding MiniPlayer}" />
+        </Panel>
+      <ContentControl Content="{Binding CurrentPage}" />
     </DockPanel>
 </UserControl>
