@@ -7,13 +7,13 @@ namespace Netmancer.ViewModels;
 
 public partial class NowPlayingViewModel : AudioViewModelBase
 {
-    protected override IReadOnlyDictionary<string, string[]> ServicePropertyMap { get; } =
+    public bool CanGoNext      => AudioService.CanGoNext;
+    public bool CanGoPrevious  => AudioService.CanGoPrevious;
+    public PlaybackPositionModel Position { get; }
+
+    protected override IReadOnlyDictionary<string, string[]> AdditionalServicePropertyMap { get; } =
         new Dictionary<string, string[]>
         {
-            [nameof(IAudioPlayerService.CurrentTrack)] =
-                [nameof(TrackTitle), nameof(ArtistName), nameof(AlbumArtUri), nameof(IsVisible)],
-            [nameof(IAudioPlayerService.IsPlaying)] =
-                [nameof(IsPlaying)],
             [nameof(IAudioPlayerService.CanGoNext)]     = [nameof(CanGoNext)],
             [nameof(IAudioPlayerService.CanGoPrevious)] = [nameof(CanGoPrevious)],
         };
@@ -34,16 +34,6 @@ public partial class NowPlayingViewModel : AudioViewModelBase
                 AudioService.SeekTo(TimeSpan.FromSeconds(seconds))
         };
     }
-
-    public string TrackTitle   => AudioService.CurrentTrack?.Title ?? string.Empty;
-    public string ArtistName   => AudioService.CurrentTrack?.Artist ?? string.Empty;
-    public string? AlbumArtUri => AudioService.CurrentTrack?.AlbumArtUri;
-    public bool IsPlaying      => AudioService.IsPlaying;
-    public bool IsVisible      => AudioService.HasTrack;
-    public bool CanGoNext      => AudioService.CanGoNext;
-    public bool CanGoPrevious  => AudioService.CanGoPrevious;
-
-    public PlaybackPositionModel Position { get; }
 
     /// <summary>
     /// Starts a timer to poll position/duration from the audio service.
